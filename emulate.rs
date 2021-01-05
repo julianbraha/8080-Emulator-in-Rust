@@ -667,7 +667,7 @@ fn emulate(state: &mut State8080) {
             // parity flag
             state.cc.p = parity(sum & 0xff); // TODO: implement parity()
 
-            state.a = sum as u8 & 0xff;
+            state.a = (sum as u8) & 0xff;
         },
         0x82 => {
             // ADD D
@@ -681,7 +681,7 @@ fn emulate(state: &mut State8080) {
             // parity flag
             state.cc.p = parity(sum & 0xff); // TODO: implement parity()
 
-            state.a = sum as u8 & 0xff;
+            state.a = (sum as u8) & 0xff;
         },
         0x83 => {
             // ADD E
@@ -695,7 +695,7 @@ fn emulate(state: &mut State8080) {
             // parity flag
             state.cc.p = parity(sum & 0xff); // TODO: implement parity()
 
-            state.a = sum as u8 & 0xff;
+            state.a = (sum as u8) & 0xff;
         },
         0x84 => {
             // ADD H
@@ -709,7 +709,7 @@ fn emulate(state: &mut State8080) {
             // parity flag
             state.cc.p = parity(sum & 0xff); // TODO: implement parity()
 
-            state.a = sum as u8 & 0xff;
+            state.a = (sum as u8) & 0xff;
         },
         0x85 => {
             // ADD L
@@ -723,7 +723,7 @@ fn emulate(state: &mut State8080) {
             // parity flag
             state.cc.p = parity(sum & 0xff); // TODO: implement parity()
 
-            state.a = sum as u8 & 0xff;
+            state.a = (sum as u8) & 0xff;
         },
         0x86 => {
             // ADD M
@@ -738,7 +738,7 @@ fn emulate(state: &mut State8080) {
             // parity flag
             state.cc.p = parity(sum & 0xff); // TODO: implement parity()
 
-            state.a = sum as u8 & 0xff;
+            state.a = (sum as u8) & 0xff;
         },
         0x87 => {
             // ADD A
@@ -752,63 +752,173 @@ fn emulate(state: &mut State8080) {
             // parity flag
             state.cc.p = parity(sum & 0xff); // TODO: implement parity()
 
-            state.a = sum as u8 & 0xff;
+            state.a = (sum as u8) & 0xff;
         },
         0x88 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ADC B
+
+            let sum: u16 = add(state.a, state.b) + state.cc.cy as u16;
+
+            set_zero_flag(state, sum);
+            set_sign_flag(state, sum);
+            set_carry_flag(state, sum);
+
+            // parity flag
+            state.cc.p = parity(sum & 0xff); // TODO: implement parity()
+
+            state.a = (sum as u8) & 0xff;
         },
         0x89 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ADC C
+
+            let sum: u16 = add(state.a, state.c) + state.cc.cy as u16;
+
+            set_zero_flag(state, sum);
+            set_sign_flag(state, sum);
+            set_carry_flag(state, sum);
+
+            // parity flag
+            state.cc.p = parity(sum & 0xff); // TODO: implement parity()
+
+            state.a = (sum as u8) & 0xff;
         },
         0x8a => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ADC D
+
+            let sum: u16 = add(state.a, state.d) + state.cc.cy as u16;
+
+            set_zero_flag(state, sum);
+            set_sign_flag(state, sum);
+            set_carry_flag(state, sum);
+
+            // parity flag
+            state.cc.p = parity(sum & 0xff); // TODO: implement parity()
+
+            state.a = (sum as u8) & 0xff;
         },
         0x8b => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ADC E
+
+            let sum: u16 = add(state.a, state.e) + state.cc.cy as u16;
+
+            set_zero_flag(state, sum);
+            set_sign_flag(state, sum);
+            set_carry_flag(state, sum);
+
+            // parity flag
+            state.cc.p = parity(sum & 0xff); // TODO: implement parity()
+
+            state.a = (sum as u8) & 0xff;
         },
         0x8c => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ADC H
+
+            let sum: u16 = add(state.a, state.h) + state.cc.cy as u16;
+
+            set_zero_flag(state, sum);
+            set_sign_flag(state, sum);
+            set_carry_flag(state, sum);
+
+            // parity flag
+            state.cc.p = parity(sum & 0xff); // TODO: implement parity()
+
+            state.a = (sum as u8) & 0xff;
         },
         0x8d => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ADC L
+
+            let sum: u16 = add(state.a, state.l) + state.cc.cy as u16;
+
+            set_zero_flag(state, sum);
+            set_sign_flag(state, sum);
+            set_carry_flag(state, sum);
+
+            // parity flag
+            state.cc.p = parity(sum & 0xff); // TODO: implement parity()
+
+            state.a = (sum as u8) & 0xff;
         },
         0x8e => {
             println!("unimplemented instruction: {}", opcode);
             return;
         },
         0x8f => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ADC A
+
+            let sum: u16 = add(state.a, state.a) + state.cc.cy as u16;
+
+            set_zero_flag(state, sum);
+            set_sign_flag(state, sum);
+            set_carry_flag(state, sum);
+
+            // parity flag
+            state.cc.p = parity(sum & 0xff); // TODO: implement parity()
+
+            state.a = (sum as u8) & 0xff;
         },
         0x90 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // SUB B
+
+            let sum: u16 = add(state.a, 0 - state.b);
+
+            set_zero_flag(state, sum);
+            set_sign_flag(state, sum);
+            set_carry_flag(state, sum);
+
+            // parity flag
+            state.cc.p = parity(sum & 0xff); // TODO: implement parity()
+
+            state.a = (sum as u8) & 0xff;
         },
         0x91 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // SUB C
+
+            let sum: u16 = add(state.a, 0 - state.c);
+
+            set_zero_flag(state, sum);
+            set_sign_flag(state, sum);
+            set_carry_flag(state, sum);
+
+            // parity flag
+            state.cc.p = parity(sum & 0xff); // TODO: implement parity()
+
+            state.a = (sum as u8) & 0xff;
         },
         0x92 => {
             println!("unimplemented instruction: {}", opcode);
             return;
         },
         0x93 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // SUB E
+
+            let sum: u16 = add(state.a, 0 - state.e);
+
+            set_zero_flag(state, sum);
+            set_sign_flag(state, sum);
+            set_carry_flag(state, sum);
+
+            // parity flag
+            state.cc.p = parity(sum & 0xff); // TODO: implement parity()
+
+            state.a = (sum as u8) & 0xff;
         },
         0x94 => {
             println!("unimplemented instruction: {}", opcode);
             return;
         },
         0x95 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // SUB L
+
+            let sum: u16 = add(state.a, 0 - state.l);
+
+            set_zero_flag(state, sum);
+            set_sign_flag(state, sum);
+            set_carry_flag(state, sum);
+
+            // parity flag
+            state.cc.p = parity(sum & 0xff); // TODO: implement parity()
+
+            state.a = (sum as u8) & 0xff;
         },
         0x96 => {
             println!("unimplemented instruction: {}", opcode);
@@ -1025,7 +1135,7 @@ fn emulate(state: &mut State8080) {
             // parity flag
             state.cc.p = parity(sum & 0xff); // TODO: implement parity()
 
-            state.a = sum as u8 & 0xff;
+            state.a = (sum as u8) & 0xff;
         },
         0xc7 => {
             println!("unimplemented instruction: {}", opcode);
