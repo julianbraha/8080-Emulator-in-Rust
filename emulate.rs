@@ -353,8 +353,7 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0x38 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // -
         },
         0x39 => {
             println!("unimplemented instruction: {}", opcode);
@@ -386,6 +385,7 @@ fn emulate(state: &mut State8080) {
         },
         0x40 => {
             // MOV B,B
+            // TODO: does this actually do anything?
             state.b = state.b;
         },
         0x41 => {
@@ -1155,8 +1155,7 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0xcb => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // -
         },
         0xcc => {
             println!("unimplemented instruction: {}", opcode);
@@ -1217,8 +1216,7 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0xd9 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // -
         },
         0xda => {
             println!("unimplemented instruction: {}", opcode);
@@ -1233,8 +1231,7 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0xdd => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // -
         },
         0xde => {
             println!("unimplemented instruction: {}", opcode);
@@ -1303,8 +1300,7 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0xed => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // -
         },
         0xee => {
             println!("unimplemented instruction: {}", opcode);
@@ -1381,8 +1377,7 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0xfd => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // -
         },
         0xfe => {
             let x: u8 = state.a - byte_2;
