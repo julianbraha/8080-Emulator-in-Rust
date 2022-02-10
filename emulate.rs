@@ -140,11 +140,21 @@ fn emulate(state: &mut State8080) {
         },
         0x04 => {
             // INR B
-            state.b += 1;
+            let sum = state.b + 1;
+            state.b = sum;
+            set_zero_flag(state, sum);
+            set_sign_flag(state, sum);
+            // TODO: handle AC cc
+            state.cc.p = parity(sum & 0xff);
         },
         0x05 => {
             // DCR B
-            state.b -= 1;
+            let diff = state.b - 1;
+            state.b = diff;
+            set_zero_flag(state, diff);
+            set_sign_flag(state, diff);
+            // TODO: handle AC cc
+            state.cc.p = parity(diff & 0xff);
         },
         0x06 => {
             // MVI B,D8
@@ -172,11 +182,21 @@ fn emulate(state: &mut State8080) {
         },
         0x0c => {
             // INR C
-            state.c += 1;
+            let sum = state.c + 1;
+            state.c = sum;
+            set_zero_flag(state, sum);
+            set_sign_flag(state, sum);
+            // TODO: handle AC cc
+            state.cc.p = parity(sum & 0xff);
         },
         0x0d => {
             // DCR C
-            state.c -= 1;
+            let diff = state.c - 1;
+            state.c = diff;
+            set_zero_flag(state, diff);
+            set_sign_flag(state, diff);
+            // TODO: handle AC cc
+            state.cc.p = parity(diff & 0xff);
         },
         0x0e => {
             // MVI C,D8
@@ -208,11 +228,21 @@ fn emulate(state: &mut State8080) {
         },
         0x14 => {
             // INR D
-            state.d += 1;
+            let sum = state.d + 1;
+            state.d = sum;
+            set_zero_flag(state, sum);
+            set_sign_flag(state, sum);
+            // TODO: handle AC cc
+            state.cc.p = parity(sum & 0xff);
         },
         0x15 => {
             // DCR D
-            state.d -= 1;
+            let diff = state.d - 1;
+            state.d = diff;
+            set_zero_flag(state, diff);
+            set_sign_flag(state, diff);
+            // TODO: handle AC cc
+            state.cc.p = parity(diff & 0xff);
         },
         0x16 => {
             // MVI D,D8
@@ -239,11 +269,21 @@ fn emulate(state: &mut State8080) {
         },
         0x1c => {
             // INR E
-            state.e += 1;
+            let sum = state.e + 1;
+            state.e = sum;
+            set_zero_flag(state, sum);
+            set_sign_flag(state, sum);
+            // TODO: handle AC cc
+            state.cc.p = parity(sum & 0xff);
         },
         0x1d => {
             // DCR E
-            state.e -= 1;
+            let diff = state.e - 1;
+            state.e = diff;
+            set_zero_flag(state, diff);
+            set_sign_flag(state, diff);
+            // TODO: handle AC cc
+            state.cc.p = parity(diff & 0xff);
         },
         0x1e => {
             // MVI E,D8
@@ -275,11 +315,21 @@ fn emulate(state: &mut State8080) {
         },
         0x24 => {
             // INR H
-            state.h += 1;
+            let sum = state.h + 1;
+            state.h = sum;
+            set_zero_flag(state, sum);
+            set_sign_flag(state, sum);
+            // TODO: handle AC cc
+            state.cc.p = parity(sum & 0xff);
         },
         0x25 => {
             // DCR H
-            state.h -= 1;
+            let diff = state.h - 1;
+            state.h = diff;
+            set_zero_flag(state, diff);
+            set_sign_flag(state, diff);
+            // TODO: handle AC cc
+            state.cc.p = parity(diff & 0xff);
         },
         0x26 => {
             // MVI H,D8
@@ -306,11 +356,21 @@ fn emulate(state: &mut State8080) {
         },
         0x2c => {
             // INR L
-            state.l += 1;
+            let sum = state.l + 1;
+            state.l = sum;
+            set_zero_flag(state, sum);
+            set_sign_flag(state, sum);
+            // TODO: handle AC cc
+            state.cc.p = parity(sum & 0xff);
         },
         0x2d => {
             // DCR L
-            state.l -= 1;
+            let diff = state.l - 1;
+            state.l = diff;
+            set_zero_flag(state, diff);
+            set_sign_flag(state, diff);
+            // TODO: handle AC cc
+            state.cc.p = parity(diff & 0xff);
         },
         0x2e => {
             // MVI L,D8
@@ -368,8 +428,14 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0x3c => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // INR A
+            let sum = state.a + 1;
+            state.a = sum;
+            set_zero_flag(state, sum);
+            set_sign_flag(state, sum);
+            // TODO: handle AC cc
+            state.cc.p = parity(sum & 0xff);
+
         },
         0x3d => {
             println!("unimplemented instruction: {}", opcode);
