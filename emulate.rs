@@ -380,8 +380,8 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0x3f => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // CMC
+            state.cc.cy = !state.cc.cy;
         },
         0x40 => {
             // MOV B,B
