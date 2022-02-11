@@ -112,6 +112,23 @@ fn set_carry_flag(state: &mut State8080, result: u16) {
     }
 }
 
+fn set_carry_flag_double(state: &mut State8080, result: u32) {
+    if result > 0xffff {
+        state.cc.cy = true;
+    } else {
+        state.cc.cy = false;
+    }
+}
+
+fn get_hl(state: &mut State8080) -> u8 {
+    let hl: u16 = (state.h as u16) << 8 | (state.l as u16);
+    return hl;
+}
+
+fn get_mem(state: &mut State8080, addr: u16) -> u8 {
+    return state.memory[addr as usize];
+}
+
 // emulates one 8080 instruction
 fn emulate(state: &mut State8080) {
     let MSB: u16 = 0b10000000;
@@ -169,8 +186,18 @@ fn emulate(state: &mut State8080) {
             // -
         },
         0x09 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // DAD B
+            let hl: u16 = ((h as u16) << 8) | (l as u16);
+            let bc: u16 = ((state.b as u16) << 8) | (state.c as u16);
+
+            let sum: u32 = (hl as u32) + (de as u32);
+
+            // h stores the leftmost 8 bits. l stores the rightmost 8 bits.
+            // if we cast sum from u16 to u8, then the leftmost 8 bits are dropped.
+            state.l = sum as u8;
+            state.h = (sum >> 8) as u8;
+
+            set_carry_flag_double(state, sum);
         },
         0x0a => {
             println!("unimplemented instruction: {}", opcode);
@@ -256,8 +283,18 @@ fn emulate(state: &mut State8080) {
             // -
         },
         0x19 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // DAD D
+            let hl: u16 = ((h as u16) << 8) | (l as u16);
+            let de: u16 = ((state.d as u16) << 8) | (state.e as u16);
+
+            let sum: u32 = (hl as u32) + (de as u32);
+
+            // h stores the leftmost 8 bits. l stores the rightmost 8 bits.
+            // if we cast sum from u16 to u8, then the leftmost 8 bits are dropped.
+            state.l = sum as u8;
+            state.h = (sum >> 8) as u8;
+
+            set_carry_flag_double(state, sum);
         },
         0x1a => {
             println!("unimplemented instruction: {}", opcode);
@@ -794,8 +831,9 @@ fn emulate(state: &mut State8080) {
         0x86 => {
             // ADD M
 
-            let offset: u16 = (state.h as u16) << 8  | (state.l as u16);
-            let sum: u16 = add(state.a, state.memory[offset as usize]);
+            let hl: u16 = get_hl(state);
+            let m: u8 = get_mem(state);
+            let sum: u16 = add(state.a, m);
 
             set_zero_flag(state, sum);
             set_sign_flag(state, sum);
