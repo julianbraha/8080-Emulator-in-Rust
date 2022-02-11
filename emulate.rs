@@ -712,28 +712,28 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0x78 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // MOV A,B
+            state.a = state.b;
         },
         0x79 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // MOV A,C
+            state.a = state.c;
         },
         0x7a => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // MOV A,D
+            state.a = state.d;
         },
         0x7b => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // MOV A,E
+            state.a = state.e;
         },
         0x7c => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // MOV A,H
+            state.a = state.h;
         },
         0x7d => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // MOV A,L
+            state.a = state.l;
         },
         0x7e => {
             println!("unimplemented instruction: {}", opcode);
