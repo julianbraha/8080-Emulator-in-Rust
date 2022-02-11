@@ -126,7 +126,7 @@ impl State8080 {
     }
 
     // concatenates h and l register values, and returns hl
-    fn get_hl(&mut self) -> u8 {
+    fn get_hl(&mut self) -> u16 {
         let hl: u16 = (self.h as u16) << 8 | (self.l as u16);
         return hl;
     }
@@ -166,8 +166,8 @@ fn emulate(state: &mut State8080) {
         },
         0x04 => {
             // INR B
-            let sum = state.b + 1;
-            state.b = sum;
+            let sum: u16 = (state.b as u16) + 1;
+            state.b = sum as u8;
             state.set_zero_flag(sum);
             state.set_sign_flag(sum);
             // TODO: handle AC cc
@@ -175,8 +175,8 @@ fn emulate(state: &mut State8080) {
         },
         0x05 => {
             // DCR B
-            let diff = state.b - 1;
-            state.b = diff;
+            let diff: u16 = (state.b as u16) - 1;
+            state.b = diff as u8;
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
             // TODO: handle AC cc
@@ -196,10 +196,10 @@ fn emulate(state: &mut State8080) {
         },
         0x09 => {
             // DAD B
-            let hl: u16 = ((h as u16) << 8) | (l as u16);
+            let hl: u16 = ((state.h as u16) << 8) | (state.l as u16);
             let bc: u16 = ((state.b as u16) << 8) | (state.c as u16);
 
-            let sum: u32 = (hl as u32) + (de as u32);
+            let sum: u32 = (hl as u32) + (bc as u32);
 
             // h stores the leftmost 8 bits. l stores the rightmost 8 bits.
             // if we cast sum from u16 to u8, then the leftmost 8 bits are dropped.
@@ -218,8 +218,8 @@ fn emulate(state: &mut State8080) {
         },
         0x0c => {
             // INR C
-            let sum = state.c + 1;
-            state.c = sum;
+            let sum: u16 = (state.c as u16) + 1;
+            state.c = sum as u8;
             state.set_zero_flag(sum);
             state.set_sign_flag(sum);
             // TODO: handle AC cc
@@ -227,8 +227,8 @@ fn emulate(state: &mut State8080) {
         },
         0x0d => {
             // DCR C
-            let diff = state.c - 1;
-            state.c = diff;
+            let diff: u16 = (state.c as u16) - 1;
+            state.c = diff as u8;
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
             // TODO: handle AC cc
@@ -264,8 +264,8 @@ fn emulate(state: &mut State8080) {
         },
         0x14 => {
             // INR D
-            let sum = state.d + 1;
-            state.d = sum;
+            let sum: u16 = (state.d as u16) + 1;
+            state.d = sum as u8;
             state.set_zero_flag(sum);
             state.set_sign_flag(sum);
             // TODO: handle AC cc
@@ -273,8 +273,8 @@ fn emulate(state: &mut State8080) {
         },
         0x15 => {
             // DCR D
-            let diff = state.d - 1;
-            state.d = diff;
+            let diff: u16 = (state.d as u16) - 1;
+            state.d = diff as u8;
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
             // TODO: handle AC cc
@@ -293,7 +293,7 @@ fn emulate(state: &mut State8080) {
         },
         0x19 => {
             // DAD D
-            let hl: u16 = ((h as u16) << 8) | (l as u16);
+            let hl: u16 = ((state.h as u16) << 8) | (state.l as u16);
             let de: u16 = ((state.d as u16) << 8) | (state.e as u16);
 
             let sum: u32 = (hl as u32) + (de as u32);
@@ -315,8 +315,8 @@ fn emulate(state: &mut State8080) {
         },
         0x1c => {
             // INR E
-            let sum = state.e + 1;
-            state.e = sum;
+            let sum: u16 = (state.e as u16) + 1;
+            state.e = sum as u8;
             state.set_zero_flag(sum);
             state.set_sign_flag(sum);
             // TODO: handle AC cc
@@ -324,8 +324,8 @@ fn emulate(state: &mut State8080) {
         },
         0x1d => {
             // DCR E
-            let diff = state.e - 1;
-            state.e = diff;
+            let diff: u16 = (state.e as u16) - 1;
+            state.e = diff as u8;
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
             // TODO: handle AC cc
@@ -361,8 +361,8 @@ fn emulate(state: &mut State8080) {
         },
         0x24 => {
             // INR H
-            let sum = state.h + 1;
-            state.h = sum;
+            let sum: u16 = (state.h as u16) + 1;
+            state.h = sum as u8;
             state.set_zero_flag(sum);
             state.set_sign_flag(sum);
             // TODO: handle AC cc
@@ -370,8 +370,8 @@ fn emulate(state: &mut State8080) {
         },
         0x25 => {
             // DCR H
-            let diff = state.h - 1;
-            state.h = diff;
+            let diff: u16 = (state.h as u16) - 1;
+            state.h = diff as u8;
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
             // TODO: handle AC cc
@@ -402,8 +402,8 @@ fn emulate(state: &mut State8080) {
         },
         0x2c => {
             // INR L
-            let sum = state.l + 1;
-            state.l = sum;
+            let sum: u16 = (state.l as u16) + 1;
+            state.l = sum as u8;
             state.set_zero_flag(sum);
             state.set_sign_flag(sum);
             // TODO: handle AC cc
@@ -411,8 +411,8 @@ fn emulate(state: &mut State8080) {
         },
         0x2d => {
             // DCR L
-            let diff = state.l - 1;
-            state.l = diff;
+            let diff: u16 = (state.l as u16) - 1;
+            state.l = diff as u8;
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
             // TODO: handle AC cc
@@ -475,8 +475,8 @@ fn emulate(state: &mut State8080) {
         },
         0x3c => {
             // INR A
-            let sum = state.a + 1;
-            state.a = sum;
+            let sum: u16 = (state.a as u16) + 1;
+            state.a = sum as u8;
             state.set_zero_flag(sum);
             state.set_sign_flag(sum);
             // TODO: handle AC cc
