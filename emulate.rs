@@ -1288,8 +1288,10 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0xd1 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // POP D
+            state.e = state.memory[state.sp as usize];
+            state.d = state.memory[(state.sp + 1) as usize];
+            state.sp += 2;
         },
         0xd2 => {
             println!("unimplemented instruction: {}", opcode);
@@ -1304,8 +1306,10 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0xd5 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // PUSH D
+            state.memory[(state.sp - 1) as usize] = state.d;
+            state.memory[(state.sp - 2) as usize] = state.e;
+            state.sp -= 2;
         },
         0xd6 => {
             println!("unimplemented instruction: {}", opcode);
