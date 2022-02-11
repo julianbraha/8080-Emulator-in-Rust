@@ -704,7 +704,7 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0x76 => {
-            println!("unimplemented instruction: {}", opcode);
+            // HLT
             return;
         },
         0x77 => {
