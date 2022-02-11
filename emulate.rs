@@ -88,46 +88,55 @@ struct State8080 {
     int_enable: u8,
 }
 
-fn set_zero_flag(state: &mut State8080, result: u16) {
-    if result == 0 {
-        state.cc.z = true;
-    } else {
-        state.cc.z = false;
+impl State8080 {
+    // sets the zero (z) condition code
+    fn set_zero_flag(&mut self, result: u16) {
+        if result == 0 {
+            self.cc.z = true;
+        } else {
+            self.cc.z = false;
+        }
+    }
+
+    // sets the sign (s) condition code
+    fn set_sign_flag(&mut self, result: u16) {
+        if result & 0b10000000 != 0 {
+            self.cc.s = true;
+        } else {
+            self.cc.s = false;
+        }
+    }
+
+    // sets the carry (cy) condition code (for u16)
+    fn set_carry_flag(&mut self, result: u16) {
+        if result > 0xff {
+            self.cc.cy = true;
+        } else {
+            self.cc.cy = false;
+        }
+    }
+
+    // sets the carry (cy) condition code (for u32)
+    fn set_carry_flag_double(&mut self, result: u32) {
+        if result > 0xffff {
+            self.cc.cy = true;
+        } else {
+            self.cc.cy = false;
+        }
+    }
+
+    // concatenates h and l register values, and returns hl
+    fn get_hl(&mut self) -> u8 {
+        let hl: u16 = (self.h as u16) << 8 | (self.l as u16);
+        return hl;
+    }
+
+    // returns the byte at the 16-bit address passed-in
+    fn get_mem(&mut self, addr: u16) -> u8 {
+        return self.memory[addr as usize];
     }
 }
 
-fn set_sign_flag(state: &mut State8080, result: u16) {
-    if result & 0b10000000 != 0 {
-        state.cc.s = true;
-    } else {
-        state.cc.s = false;
-    }
-}
-
-fn set_carry_flag(state: &mut State8080, result: u16) {
-    if result > 0xff {
-        state.cc.cy = true;
-    } else {
-        state.cc.cy = false;
-    }
-}
-
-fn set_carry_flag_double(state: &mut State8080, result: u32) {
-    if result > 0xffff {
-        state.cc.cy = true;
-    } else {
-        state.cc.cy = false;
-    }
-}
-
-fn get_hl(state: &mut State8080) -> u8 {
-    let hl: u16 = (state.h as u16) << 8 | (state.l as u16);
-    return hl;
-}
-
-fn get_mem(state: &mut State8080, addr: u16) -> u8 {
-    return state.memory[addr as usize];
-}
 
 // emulates one 8080 instruction
 fn emulate(state: &mut State8080) {
@@ -159,8 +168,8 @@ fn emulate(state: &mut State8080) {
             // INR B
             let sum = state.b + 1;
             state.b = sum;
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
             // TODO: handle AC cc
             state.cc.p = parity(sum & 0xff);
         },
@@ -168,8 +177,8 @@ fn emulate(state: &mut State8080) {
             // DCR B
             let diff = state.b - 1;
             state.b = diff;
-            set_zero_flag(state, diff);
-            set_sign_flag(state, diff);
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
             // TODO: handle AC cc
             state.cc.p = parity(diff & 0xff);
         },
@@ -197,7 +206,7 @@ fn emulate(state: &mut State8080) {
             state.l = sum as u8;
             state.h = (sum >> 8) as u8;
 
-            set_carry_flag_double(state, sum);
+            state.set_carry_flag_double(sum);
         },
         0x0a => {
             println!("unimplemented instruction: {}", opcode);
@@ -211,8 +220,8 @@ fn emulate(state: &mut State8080) {
             // INR C
             let sum = state.c + 1;
             state.c = sum;
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
             // TODO: handle AC cc
             state.cc.p = parity(sum & 0xff);
         },
@@ -220,8 +229,8 @@ fn emulate(state: &mut State8080) {
             // DCR C
             let diff = state.c - 1;
             state.c = diff;
-            set_zero_flag(state, diff);
-            set_sign_flag(state, diff);
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
             // TODO: handle AC cc
             state.cc.p = parity(diff & 0xff);
         },
@@ -257,8 +266,8 @@ fn emulate(state: &mut State8080) {
             // INR D
             let sum = state.d + 1;
             state.d = sum;
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
             // TODO: handle AC cc
             state.cc.p = parity(sum & 0xff);
         },
@@ -266,8 +275,8 @@ fn emulate(state: &mut State8080) {
             // DCR D
             let diff = state.d - 1;
             state.d = diff;
-            set_zero_flag(state, diff);
-            set_sign_flag(state, diff);
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
             // TODO: handle AC cc
             state.cc.p = parity(diff & 0xff);
         },
@@ -294,7 +303,7 @@ fn emulate(state: &mut State8080) {
             state.l = sum as u8;
             state.h = (sum >> 8) as u8;
 
-            set_carry_flag_double(state, sum);
+            state.set_carry_flag_double(sum);
         },
         0x1a => {
             println!("unimplemented instruction: {}", opcode);
@@ -308,8 +317,8 @@ fn emulate(state: &mut State8080) {
             // INR E
             let sum = state.e + 1;
             state.e = sum;
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
             // TODO: handle AC cc
             state.cc.p = parity(sum & 0xff);
         },
@@ -317,8 +326,8 @@ fn emulate(state: &mut State8080) {
             // DCR E
             let diff = state.e - 1;
             state.e = diff;
-            set_zero_flag(state, diff);
-            set_sign_flag(state, diff);
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
             // TODO: handle AC cc
             state.cc.p = parity(diff & 0xff);
         },
@@ -354,8 +363,8 @@ fn emulate(state: &mut State8080) {
             // INR H
             let sum = state.h + 1;
             state.h = sum;
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
             // TODO: handle AC cc
             state.cc.p = parity(sum & 0xff);
         },
@@ -363,8 +372,8 @@ fn emulate(state: &mut State8080) {
             // DCR H
             let diff = state.h - 1;
             state.h = diff;
-            set_zero_flag(state, diff);
-            set_sign_flag(state, diff);
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
             // TODO: handle AC cc
             state.cc.p = parity(diff & 0xff);
         },
@@ -395,8 +404,8 @@ fn emulate(state: &mut State8080) {
             // INR L
             let sum = state.l + 1;
             state.l = sum;
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
             // TODO: handle AC cc
             state.cc.p = parity(sum & 0xff);
         },
@@ -404,8 +413,8 @@ fn emulate(state: &mut State8080) {
             // DCR L
             let diff = state.l - 1;
             state.l = diff;
-            set_zero_flag(state, diff);
-            set_sign_flag(state, diff);
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
             // TODO: handle AC cc
             state.cc.p = parity(diff & 0xff);
         },
@@ -468,8 +477,8 @@ fn emulate(state: &mut State8080) {
             // INR A
             let sum = state.a + 1;
             state.a = sum;
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
             // TODO: handle AC cc
             state.cc.p = parity(sum & 0xff);
 
@@ -749,9 +758,9 @@ fn emulate(state: &mut State8080) {
             // a and b are u8, but we need to capture the carry-out, so we use u16
             let sum: u16 = add(state.a, state.b);
 
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
-            set_carry_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
+            state.set_carry_flag(sum);
 
             // parity flag
             state.cc.p = parity(sum & 0xff);
@@ -763,9 +772,9 @@ fn emulate(state: &mut State8080) {
 
             let sum: u16 = add(state.a, state.c);
 
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
-            set_carry_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
+            state.set_carry_flag(sum);
 
             // parity flag
             state.cc.p = parity(sum & 0xff);
@@ -777,9 +786,9 @@ fn emulate(state: &mut State8080) {
 
             let sum: u16 = add(state.a, state.d);
 
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
-            set_carry_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
+            state.set_carry_flag(sum);
 
             // parity flag
             state.cc.p = parity(sum & 0xff);
@@ -791,9 +800,9 @@ fn emulate(state: &mut State8080) {
 
             let sum: u16 = add(state.a, state.e);
 
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
-            set_carry_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
+            state.set_carry_flag(sum);
 
             // parity flag
             state.cc.p = parity(sum & 0xff);
@@ -805,9 +814,9 @@ fn emulate(state: &mut State8080) {
 
             let sum: u16 = add(state.a, state.h);
 
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
-            set_carry_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
+            state.set_carry_flag(sum);
 
             // parity flag
             state.cc.p = parity(sum & 0xff);
@@ -819,9 +828,9 @@ fn emulate(state: &mut State8080) {
 
             let sum: u16 = add(state.a, state.l);
 
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
-            set_carry_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
+            state.set_carry_flag(sum);
 
             // parity flag
             state.cc.p = parity(sum & 0xff);
@@ -830,14 +839,13 @@ fn emulate(state: &mut State8080) {
         },
         0x86 => {
             // ADD M
-
-            let hl: u16 = get_hl(state);
-            let m: u8 = get_mem(state);
+            let hl: u16 = state.get_hl();
+            let m: u8 = state.get_mem(hl);
             let sum: u16 = add(state.a, m);
 
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
-            set_carry_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
+            state.set_carry_flag(sum);
 
             // parity flag
             state.cc.p = parity(sum & 0xff);
@@ -849,9 +857,9 @@ fn emulate(state: &mut State8080) {
 
             let sum: u16 = add(state.a, state.a);
 
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
-            set_carry_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
+            state.set_carry_flag(sum);
 
             // parity flag
             state.cc.p = parity(sum & 0xff);
@@ -863,9 +871,9 @@ fn emulate(state: &mut State8080) {
 
             let sum: u16 = add(state.a, state.b) + state.cc.cy as u16;
 
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
-            set_carry_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
+            state.set_carry_flag(sum);
 
             // parity flag
             state.cc.p = parity(sum & 0xff);
@@ -877,9 +885,9 @@ fn emulate(state: &mut State8080) {
 
             let sum: u16 = add(state.a, state.c) + state.cc.cy as u16;
 
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
-            set_carry_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
+            state.set_carry_flag(sum);
 
             // parity flag
             state.cc.p = parity(sum & 0xff);
@@ -891,9 +899,9 @@ fn emulate(state: &mut State8080) {
 
             let sum: u16 = add(state.a, state.d) + state.cc.cy as u16;
 
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
-            set_carry_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
+            state.set_carry_flag(sum);
 
             // parity flag
             state.cc.p = parity(sum & 0xff);
@@ -905,9 +913,9 @@ fn emulate(state: &mut State8080) {
 
             let sum: u16 = add(state.a, state.e) + state.cc.cy as u16;
 
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
-            set_carry_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
+            state.set_carry_flag(sum);
 
             // parity flag
             state.cc.p = parity(sum & 0xff);
@@ -919,9 +927,9 @@ fn emulate(state: &mut State8080) {
 
             let sum: u16 = add(state.a, state.h) + state.cc.cy as u16;
 
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
-            set_carry_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
+            state.set_carry_flag(sum);
 
             // parity flag
             state.cc.p = parity(sum & 0xff);
@@ -933,9 +941,9 @@ fn emulate(state: &mut State8080) {
 
             let sum: u16 = add(state.a, state.l) + state.cc.cy as u16;
 
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
-            set_carry_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
+            state.set_carry_flag(sum);
 
             // parity flag
             state.cc.p = parity(sum & 0xff);
@@ -951,9 +959,9 @@ fn emulate(state: &mut State8080) {
 
             let sum: u16 = add(state.a, state.a) + state.cc.cy as u16;
 
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
-            set_carry_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
+            state.set_carry_flag(sum);
 
             // parity flag
             state.cc.p = parity(sum & 0xff);
@@ -965,9 +973,9 @@ fn emulate(state: &mut State8080) {
 
             let sum: u16 = add(state.a, 0 - state.b);
 
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
-            set_carry_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
+            state.set_carry_flag(sum);
 
             // parity flag
             state.cc.p = parity(sum & 0xff);
@@ -979,9 +987,9 @@ fn emulate(state: &mut State8080) {
 
             let sum: u16 = add(state.a, 0 - state.c);
 
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
-            set_carry_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
+            state.set_carry_flag(sum);
 
             // parity flag
             state.cc.p = parity(sum & 0xff);
@@ -997,9 +1005,9 @@ fn emulate(state: &mut State8080) {
 
             let sum: u16 = add(state.a, 0 - state.e);
 
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
-            set_carry_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
+            state.set_carry_flag(sum);
 
             // parity flag
             state.cc.p = parity(sum & 0xff);
@@ -1015,9 +1023,9 @@ fn emulate(state: &mut State8080) {
 
             let sum: u16 = add(state.a, 0 - state.l);
 
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
-            set_carry_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
+            state.set_carry_flag(sum);
 
             // parity flag
             state.cc.p = parity(sum & 0xff);
@@ -1232,9 +1240,9 @@ fn emulate(state: &mut State8080) {
             // a and b are u8, but we need to capture the carry-out, so we use u16
             let sum: u16 = add(state.a, byte_2);
 
-            set_zero_flag(state, sum);
-            set_sign_flag(state, sum);
-            set_carry_flag(state, sum);
+            state.set_zero_flag(sum);
+            state.set_sign_flag(sum);
+            state.set_carry_flag(sum);
 
             // parity flag
             state.cc.p = parity(sum & 0xff);
