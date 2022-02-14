@@ -1379,36 +1379,104 @@ fn emulate(state: &mut State8080) {
             state.a = or as u8;
         },
         0xb8 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // CMP B
+            let diff: u16 = state.a as u16 - state.b as u16 ;
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
+            state.set_carry_flag(diff);
+
+            // parity flag
+            state.cc.p = parity(diff & 0xff);
+
+            // TODO: handle AC cc
         },
         0xb9 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // CMP C
+            let diff: u16 = state.a as u16 - state.c as u16 ;
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
+            state.set_carry_flag(diff);
+
+            // parity flag
+            state.cc.p = parity(diff & 0xff);
+
+            // TODO: handle AC cc
         },
         0xba => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // CMP D
+            let diff: u16 = state.a as u16 - state.d as u16 ;
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
+            state.set_carry_flag(diff);
+
+            // parity flag
+            state.cc.p = parity(diff & 0xff);
+
+            // TODO: handle AC cc
         },
         0xbb => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // CMP E
+            let diff: u16 = state.a as u16 - state.e as u16 ;
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
+            state.set_carry_flag(diff);
+
+            // parity flag
+            state.cc.p = parity(diff & 0xff);
+
+            // TODO: handle AC cc
         },
         0xbc => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // CMP H
+            let diff: u16 = state.a as u16 - state.h as u16 ;
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
+            state.set_carry_flag(diff);
+
+            // parity flag
+            state.cc.p = parity(diff & 0xff);
+
+            // TODO: handle AC cc
         },
         0xbd => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // CMP L
+            let diff: u16 = state.a as u16 - state.l as u16 ;
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
+            state.set_carry_flag(diff);
+
+            // parity flag
+            state.cc.p = parity(diff & 0xff);
+
+            // TODO: handle AC cc
         },
         0xbe => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // CMP M
+            let hl = state.get_hl();
+            let m = state.get_mem(hl);
+
+            let diff: u16 = state.a as u16 - m as u16 ;
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
+            state.set_carry_flag(diff);
+
+            // parity flag
+            state.cc.p = parity(diff & 0xff);
+
+            // TODO: handle AC cc
         },
         0xbf => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // CMP A
+            // TODO: optimize this?
+            let diff: u16 = state.a as u16 - state.a as u16 ;
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
+            state.set_carry_flag(diff);
+
+            // parity flag
+            state.cc.p = parity(diff & 0xff);
+
+            // TODO: handle AC cc
         },
         0xc0 => {
             println!("unimplemented instruction: {}", opcode);
