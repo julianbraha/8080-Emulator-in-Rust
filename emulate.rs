@@ -167,8 +167,15 @@ fn emulate(state: &mut State8080) {
             state.set_mem(bc, state.a);
         },
         0x03 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // INX B
+            let bc: u16 = ((state.b as u16) << 8) | (state.c as u16);
+            let bc_inc: u16 = bc + 1;
+
+            // shift out the rightmost 8 bits, and truncate to use only the remaining 8 bits.
+            state.b = (bc_inc >> 8) as u8;
+
+            // truncate the leftmost 8 bits
+            state.c = bc_inc as u8
         },
         0x04 => {
             // INR B
@@ -266,8 +273,15 @@ fn emulate(state: &mut State8080) {
             state.set_mem(de, state.a);
         },
         0x13 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // INX B
+            let de: u16 = ((state.d as u16) << 8) | (state.e as u16);
+            let de_inc: u16 = de + 1;
+
+            // shift out the rightmost 8 bits, and truncate to use only the remaining 8 bits.
+            state.d = (de_inc >> 8) as u8;
+
+            // truncate the leftmost 8 bits
+            state.e = de_inc as u8
         },
         0x14 => {
             // INR D
@@ -363,8 +377,15 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0x23 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // INX H
+            let hl: u16 = state.get_hl();
+            let hl_inc: u16 = hl + 1;
+
+            // shift out the rightmost 8 bits, and truncate to use only the remaining 8 bits.
+            state.h = (hl_inc >> 8) as u8;
+
+            // truncate the leftmost 8 bits
+            state.l = hl_inc as u8
         },
         0x24 => {
             // INR H
@@ -446,8 +467,8 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0x33 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // INX SP
+            state.sp += 1;
         },
         0x34 => {
             println!("unimplemented instruction: {}", opcode);
