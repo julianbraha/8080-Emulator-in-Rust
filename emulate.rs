@@ -1133,36 +1133,134 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0xa8 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // XRA B
+            // a and b are u8, but we need to capture the carry-out, so we use u16
+            let xor: u16 = state.a as u16 ^ state.b as u16;
+
+            state.set_zero_flag(xor);
+            state.set_sign_flag(xor);
+            state.set_carry_flag(xor);
+
+            // parity flag
+            state.cc.p = parity(xor & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = xor as u8;
         },
         0xa9 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // XRA C
+            // a and c are u8, but we need to capture the carry-out, so we use u16
+            let xor: u16 = state.a as u16 ^ state.c as u16;
+
+            state.set_zero_flag(xor);
+            state.set_sign_flag(xor);
+            state.set_carry_flag(xor);
+
+            // parity flag
+            state.cc.p = parity(xor & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = xor as u8;
         },
         0xaa => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // XRA D
+
+            let xor: u16 = state.a as u16 ^ state.d as u16;
+
+            state.set_zero_flag(xor);
+            state.set_sign_flag(xor);
+            state.set_carry_flag(xor);
+
+            // parity flag
+            state.cc.p = parity(xor & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = xor as u8;
         },
         0xab => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // XRA E
+
+            let xor: u16 = state.a as u16 ^ state.e as u16;
+
+            state.set_zero_flag(xor);
+            state.set_sign_flag(xor);
+            state.set_carry_flag(xor);
+
+            // parity flag
+            state.cc.p = parity(xor & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = xor as u8;
         },
         0xac => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // XRA H
+
+            let xor: u16 = state.a as u16 ^ state.h as u16;
+
+            state.set_zero_flag(xor);
+            state.set_sign_flag(xor);
+            state.set_carry_flag(xor);
+
+            // parity flag
+            state.cc.p = parity(xor & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = xor as u8;
         },
         0xad => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // XRA L
+
+            let xor: u16 = state.a as u16 ^ state.l as u16;
+
+            state.set_zero_flag(xor);
+            state.set_sign_flag(xor);
+            state.set_carry_flag(xor);
+
+            // parity flag
+            state.cc.p = parity(xor & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = xor as u8;
         },
         0xae => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // XRA M
+            let hl: u16 = state.get_hl();
+            let m: u8 = state.get_mem(hl);
+
+            let xor: u16 = state.a as u16 ^ m as u16;
+
+            state.set_zero_flag(xor);
+            state.set_sign_flag(xor);
+            state.set_carry_flag(xor);
+
+            // parity flag
+            state.cc.p = parity(xor & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = xor as u8;
         },
         0xaf => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // XRA A
+            // TODO: can we just optimize this to set a to 0, and set flags?
+            let xor: u16 = state.a as u16 ^ state.a as u16;
+
+            state.set_zero_flag(xor);
+            state.set_sign_flag(xor);
+            state.set_carry_flag(xor);
+
+            // parity flag
+            state.cc.p = parity(xor & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = xor as u8;
         },
         0xb0 => {
             println!("unimplemented instruction: {}", opcode);
