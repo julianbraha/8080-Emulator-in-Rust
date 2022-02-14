@@ -146,9 +146,9 @@ impl State8080 {
 // emulates one 8080 instruction
 fn emulate(state: &mut State8080) {
     let MSB: u16 = 0b10000000;
-    let opcode: u8 = state.memory[state.pc as usize]; // only needs 4 bytes, but rust doesn't have that...
-    let byte_2: u8 = state.memory[(state.pc + 1) as usize];
-    let byte_3: u8 = state.memory[(state.pc + 2) as usize];
+    let opcode: u8 = state.get_mem(state.pc); // only needs 4 bytes, but rust doesn't have that...
+    let byte_2: u8 = state.get_mem(state.pc + 1);
+    let byte_3: u8 = state.get_mem(state.pc + 2);
 
     match opcode {
         0x00 => {
@@ -1484,8 +1484,8 @@ fn emulate(state: &mut State8080) {
         },
         0xc1 => {
             // POP B
-            state.c = state.memory[state.sp as usize];
-            state.b = state.memory[(state.sp + 1) as usize];
+            state.c = state.get_mem(state.sp);
+            state.b = state.get_mem(state.sp + 1);
             state.sp += 2;
         },
         0xc2 => {
@@ -1508,8 +1508,8 @@ fn emulate(state: &mut State8080) {
         },
         0xc5 => {
             // PUSH B
-            state.memory[(state.sp - 1) as usize] = state.b;
-            state.memory[(state.sp - 2) as usize] = state.c;
+            state.set_mem(state.sp - 1, state.b);
+            state.set_mem(state.sp - 2, state.c);
             state.sp -= 2;
         },
         0xc6 => {
@@ -1537,7 +1537,7 @@ fn emulate(state: &mut State8080) {
         },
         0xc9 => {
             // RET
-            state.pc = state.memory[state.pc as usize] as u16 | ((state.memory[(state.sp + 1) as usize] as u16) << 8);
+            state.pc = state.get_mem(state.pc) as u16 | (state.get_mem(state.sp + 1) as u16) << 8;
             state.sp += 2;
         },
         0xca => {
@@ -1556,8 +1556,8 @@ fn emulate(state: &mut State8080) {
 
             let ret: u16 = state.pc + 2;
 
-            state.memory[(state.sp - 1) as usize] = (ret >> 8) as u8 & 0xff;
-            state.memory[(state.sp - 2) as usize] = ret as u8 & 0xff;
+            state.set_mem(state.sp - 1, (ret >> 8) as u8 & 0xff);
+            state.set_mem(state.sp - 2, ret as u8 & 0xff);
             state.sp = state.sp - 2;
             state.pc = (byte_3 as u16) << 8 | byte_2 as u16;
         },
@@ -1575,8 +1575,8 @@ fn emulate(state: &mut State8080) {
         },
         0xd1 => {
             // POP D
-            state.e = state.memory[state.sp as usize];
-            state.d = state.memory[(state.sp + 1) as usize];
+            state.e = state.get_mem(state.sp);
+            state.d = state.get_mem(state.sp + 1);
             state.sp += 2;
         },
         0xd2 => {
@@ -1593,8 +1593,8 @@ fn emulate(state: &mut State8080) {
         },
         0xd5 => {
             // PUSH D
-            state.memory[(state.sp - 1) as usize] = state.d;
-            state.memory[(state.sp - 2) as usize] = state.e;
+            state.set_mem(state.sp - 1, state.d);
+            state.set_mem(state.sp - 2, state.e);
             state.sp -= 2;
         },
         0xd6 => {
@@ -1714,8 +1714,8 @@ fn emulate(state: &mut State8080) {
         },
         0xf1 => {
             // POP PSW
-            state.a = state.memory[(state.sp + 1) as usize];
-            let psw: u8 = state.memory[state.sp as usize];
+            state.a = state.get_mem(state.sp + 1);
+            let psw: u8 = state.get_mem(state.sp);
             state.cc.z = 0x01 == psw & 0x01;
             state.cc.s = 0x02 == psw & 0x02;
             state.cc.p = 0x04 == psw & 0x04;
@@ -1737,13 +1737,13 @@ fn emulate(state: &mut State8080) {
         },
         0xf5 => {
             // PUSH PSW
-            state.memory[(state.sp - 1) as usize] = state.a;
+            state.set_mem(state.sp - 1, state.a);
             let psw: u8 = state.cc.z as u8 |
                           (state.cc.s as u8) << 1 |
                           (state.cc.p as u8) << 2 |
                           (state.cc.cy as u8) << 3 |
                           (state.cc.ac as u8) << 4;
-            state.memory[(state.sp - 2) as usize] = psw;
+            state.set_mem(state.sp - 2, psw);
             state.sp -= 2;
         },
         0xf6 => {
