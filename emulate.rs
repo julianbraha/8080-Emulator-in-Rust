@@ -222,8 +222,10 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag_double(sum);
         },
         0x0a => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // LDAX B
+            let bc = (state.b as u16) << 8 | state.c as u16;
+            let bc_mem = state.get_mem(bc);
+            state.a = bc_mem;
         },
         0x0b => {
             println!("unimplemented instruction: {}", opcode);
@@ -327,8 +329,10 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag_double(sum);
         },
         0x1a => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // LDAX D
+            let de = (state.d as u16) << 8 | state.e as u16;
+            let de_mem = state.get_mem(de);
+            state.a = de_mem;
         },
         0x1b => {
             println!("unimplemented instruction: {}", opcode);
@@ -417,6 +421,7 @@ fn emulate(state: &mut State8080) {
             // -
         },
         0x29 => {
+            // TODO: necessary for space invaders
             println!("unimplemented instruction: {}", opcode);
             return;
         },
@@ -459,10 +464,12 @@ fn emulate(state: &mut State8080) {
             // -
         },
         0x31 => {
+            // TODO: necessary for space invaders
             println!("unimplemented instruction: {}", opcode);
             return;
         },
         0x32 => {
+            // TODO: necessary for space invaders
             println!("unimplemented instruction: {}", opcode);
             return;
         },
@@ -479,8 +486,9 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0x36 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // MVI M,D8
+            let hl = state.get_hl();
+            state.set_mem(hl, byte_2);
         },
         0x37 => {
             println!("unimplemented instruction: {}", opcode);
@@ -494,6 +502,7 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0x3a => {
+            // TODO: necessary for space invaders
             println!("unimplemented instruction: {}", opcode);
             return;
         },
@@ -516,8 +525,8 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0x3e => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // MVI A,D8
+            state.a = byte_2;
         },
         0x3f => {
             // CMC
@@ -613,8 +622,10 @@ fn emulate(state: &mut State8080) {
             state.d = state.l;
         },
         0x56 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // MOV D,M
+            let hl = state.get_hl();
+            let m = state.get_mem(hl);
+            state.d = m;
         },
         0x57 => {
             // MOV D,A
@@ -645,8 +656,10 @@ fn emulate(state: &mut State8080) {
             state.e = state.l;
         },
         0x5e => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // MOV E,M
+            let hl = state.get_hl();
+            let m = state.get_mem(hl);
+            state.e = m;
         },
         0x5f => {
             // MOV E,A
@@ -677,8 +690,10 @@ fn emulate(state: &mut State8080) {
             state.h = state.l;
         },
         0x66 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // MOV H,M
+            let hl = state.get_hl();
+            let m = state.get_mem(hl);
+            state.h = m;
         },
         0x67 => {
             // MOV H,A
@@ -745,8 +760,9 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0x77 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // MOV M,A
+            let hl = state.get_hl();
+            state.set_mem(hl, state.a);
         },
         0x78 => {
             // MOV A,B
@@ -773,8 +789,9 @@ fn emulate(state: &mut State8080) {
             state.a = state.l;
         },
         0x7e => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // MOV A,M
+            let hl = state.get_hl();
+            state.set_mem(hl, state.a);
         },
         0x7f => {
             println!("unimplemented instruction: {}", opcode);
@@ -1101,41 +1118,124 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0xa0 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ANA B
+            let and = (state.a as u16) & (state.b as u16);
+            state.set_zero_flag(and);
+            state.set_sign_flag(and);
+            state.set_carry_flag(and);
+
+            // parity flag
+            state.cc.p = parity(and & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = and as u8;
         },
         0xa1 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ANA C
+            let and = (state.a as u16) & (state.c as u16);
+            state.set_zero_flag(and);
+            state.set_sign_flag(and);
+            state.set_carry_flag(and);
+
+            // parity flag
+            state.cc.p = parity(and & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = and as u8;
         },
         0xa2 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ANA D
+            let and = (state.a as u16) & (state.d as u16);
+            state.set_zero_flag(and);
+            state.set_sign_flag(and);
+            state.set_carry_flag(and);
+
+            // parity flag
+            state.cc.p = parity(and & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = and as u8;
         },
         0xa3 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ANA E
+            let and = (state.a as u16) & (state.e as u16);
+            state.set_zero_flag(and);
+            state.set_sign_flag(and);
+            state.set_carry_flag(and);
+
+            // parity flag
+            state.cc.p = parity(and & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = and as u8;
         },
         0xa4 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ANA H
+            let and = (state.a as u16) & (state.h as u16);
+            state.set_zero_flag(and);
+            state.set_sign_flag(and);
+            state.set_carry_flag(and);
+
+            // parity flag
+            state.cc.p = parity(and & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = and as u8;
         },
         0xa5 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ANA L
+            let and = (state.a as u16) & (state.l as u16);
+            state.set_zero_flag(and);
+            state.set_sign_flag(and);
+            state.set_carry_flag(and);
+
+            // parity flag
+            state.cc.p = parity(and & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = and as u8;
         },
         0xa6 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ANA M
+            let hl = state.get_hl();
+            let m = state.get_mem(hl);
+            let and = (state.a as u16) & (m as u16);
+            state.set_zero_flag(and);
+            state.set_sign_flag(and);
+            state.set_carry_flag(and);
+
+            // parity flag
+            state.cc.p = parity(and & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = and as u8;
         },
         0xa7 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ANA A
+            // TODO: optimize this?
+            let and = (state.a as u16) & (state.a as u16);
+            state.set_zero_flag(and);
+            state.set_sign_flag(and);
+            state.set_carry_flag(and);
+
+            // parity flag
+            state.cc.p = parity(and & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = and as u8;
         },
         0xa8 => {
             // XRA B
             // a and b are u8, but we need to capture the carry-out, so we use u16
-            let xor: u16 = state.a as u16 ^ state.b as u16;
+            let xor: u16 = (state.a as u16) ^ (state.b as u16);
 
             state.set_zero_flag(xor);
             state.set_sign_flag(xor);
@@ -1151,7 +1251,7 @@ fn emulate(state: &mut State8080) {
         0xa9 => {
             // XRA C
             // a and c are u8, but we need to capture the carry-out, so we use u16
-            let xor: u16 = state.a as u16 ^ state.c as u16;
+            let xor: u16 = (state.a as u16) ^ (state.c as u16);
 
             state.set_zero_flag(xor);
             state.set_sign_flag(xor);
@@ -1167,7 +1267,7 @@ fn emulate(state: &mut State8080) {
         0xaa => {
             // XRA D
 
-            let xor: u16 = state.a as u16 ^ state.d as u16;
+            let xor: u16 = (state.a as u16) ^ (state.d as u16);
 
             state.set_zero_flag(xor);
             state.set_sign_flag(xor);
@@ -1183,7 +1283,7 @@ fn emulate(state: &mut State8080) {
         0xab => {
             // XRA E
 
-            let xor: u16 = state.a as u16 ^ state.e as u16;
+            let xor: u16 = (state.a as u16) ^ (state.e as u16);
 
             state.set_zero_flag(xor);
             state.set_sign_flag(xor);
@@ -1199,7 +1299,7 @@ fn emulate(state: &mut State8080) {
         0xac => {
             // XRA H
 
-            let xor: u16 = state.a as u16 ^ state.h as u16;
+            let xor: u16 = (state.a as u16) ^ (state.h as u16);
 
             state.set_zero_flag(xor);
             state.set_sign_flag(xor);
@@ -1215,7 +1315,7 @@ fn emulate(state: &mut State8080) {
         0xad => {
             // XRA L
 
-            let xor: u16 = state.a as u16 ^ state.l as u16;
+            let xor: u16 = (state.a as u16) ^ (state.l as u16);
 
             state.set_zero_flag(xor);
             state.set_sign_flag(xor);
@@ -1233,7 +1333,7 @@ fn emulate(state: &mut State8080) {
             let hl: u16 = state.get_hl();
             let m: u8 = state.get_mem(hl);
 
-            let xor: u16 = state.a as u16 ^ m as u16;
+            let xor: u16 = (state.a as u16) ^ (m as u16);
 
             state.set_zero_flag(xor);
             state.set_sign_flag(xor);
@@ -1249,7 +1349,7 @@ fn emulate(state: &mut State8080) {
         0xaf => {
             // XRA A
             // TODO: can we just optimize this to set a to 0, and set flags?
-            let xor: u16 = state.a as u16 ^ state.a as u16;
+            let xor: u16 = (state.a as u16) ^ (state.a as u16);
 
             state.set_zero_flag(xor);
             state.set_sign_flag(xor);
@@ -1264,7 +1364,7 @@ fn emulate(state: &mut State8080) {
         },
         0xb0 => {
             // ORA B
-            let or: u16 = state.a as u16 | state.b as u16;
+            let or: u16 = (state.a as u16) | (state.b as u16);
             state.set_zero_flag(or);
             state.set_sign_flag(or);
             state.set_carry_flag(or);
@@ -1278,7 +1378,7 @@ fn emulate(state: &mut State8080) {
         },
         0xb1 => {
             // ORA C
-            let or: u16 = state.a as u16 | state.c as u16 ;
+            let or: u16 = (state.a as u16) | (state.c as u16);
             state.set_zero_flag(or);
             state.set_sign_flag(or);
             state.set_carry_flag(or);
@@ -1292,7 +1392,7 @@ fn emulate(state: &mut State8080) {
         },
         0xb2 => {
             // ORA D
-            let or: u16 = state.a as u16 | state.d as u16 ;
+            let or: u16 = (state.a as u16) | (state.d as u16);
             state.set_zero_flag(or);
             state.set_sign_flag(or);
             state.set_carry_flag(or);
@@ -1306,7 +1406,7 @@ fn emulate(state: &mut State8080) {
         },
         0xb3 => {
             // ORA E
-            let or: u16 = state.a as u16 | state.e as u16 ;
+            let or: u16 = (state.a as u16) | (state.e as u16);
             state.set_zero_flag(or);
             state.set_sign_flag(or);
             state.set_carry_flag(or);
@@ -1320,7 +1420,7 @@ fn emulate(state: &mut State8080) {
         },
         0xb4 => {
             // ORA H
-            let or: u16 = state.a as u16 | state.h as u16 ;
+            let or: u16 = (state.a as u16) | (state.h as u16);
             state.set_zero_flag(or);
             state.set_sign_flag(or);
             state.set_carry_flag(or);
@@ -1334,7 +1434,7 @@ fn emulate(state: &mut State8080) {
         },
         0xb5 => {
             // ORA L
-            let or: u16 = state.a as u16 | state.l as u16 ;
+            let or: u16 = (state.a as u16) | (state.l as u16);
             state.set_zero_flag(or);
             state.set_sign_flag(or);
             state.set_carry_flag(or);
@@ -1351,7 +1451,7 @@ fn emulate(state: &mut State8080) {
             let hl = state.get_hl();
             let m = state.get_mem(hl);
 
-            let or: u16 = state.a as u16 | m as u16 ;
+            let or: u16 = (state.a as u16) | (m as u16);
             state.set_zero_flag(or);
             state.set_sign_flag(or);
             state.set_carry_flag(or);
@@ -1366,7 +1466,7 @@ fn emulate(state: &mut State8080) {
         0xb7 => {
             // ORA A
             // TODO: can this be optimized to just not modify a and set the flags?
-            let or: u16 = state.a as u16 | state.a as u16 ;
+            let or: u16 = (state.a as u16) | (state.a as u16);
             state.set_zero_flag(or);
             state.set_sign_flag(or);
             state.set_carry_flag(or);
@@ -1380,7 +1480,7 @@ fn emulate(state: &mut State8080) {
         },
         0xb8 => {
             // CMP B
-            let diff: u16 = state.a as u16 - state.b as u16 ;
+            let diff: u16 = (state.a as u16) - (state.b as u16);
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
             state.set_carry_flag(diff);
@@ -1392,7 +1492,7 @@ fn emulate(state: &mut State8080) {
         },
         0xb9 => {
             // CMP C
-            let diff: u16 = state.a as u16 - state.c as u16 ;
+            let diff: u16 = (state.a as u16) - (state.c as u16);
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
             state.set_carry_flag(diff);
@@ -1404,7 +1504,7 @@ fn emulate(state: &mut State8080) {
         },
         0xba => {
             // CMP D
-            let diff: u16 = state.a as u16 - state.d as u16 ;
+            let diff: u16 = (state.a as u16) - (state.d as u16);
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
             state.set_carry_flag(diff);
@@ -1416,7 +1516,7 @@ fn emulate(state: &mut State8080) {
         },
         0xbb => {
             // CMP E
-            let diff: u16 = state.a as u16 - state.e as u16 ;
+            let diff: u16 = (state.a as u16) - (state.e as u16);
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
             state.set_carry_flag(diff);
@@ -1428,7 +1528,7 @@ fn emulate(state: &mut State8080) {
         },
         0xbc => {
             // CMP H
-            let diff: u16 = state.a as u16 - state.h as u16 ;
+            let diff: u16 = (state.a as u16) - (state.h as u16);
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
             state.set_carry_flag(diff);
@@ -1440,7 +1540,7 @@ fn emulate(state: &mut State8080) {
         },
         0xbd => {
             // CMP L
-            let diff: u16 = state.a as u16 - state.l as u16 ;
+            let diff: u16 = (state.a as u16) - (state.l as u16);
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
             state.set_carry_flag(diff);
@@ -1455,7 +1555,7 @@ fn emulate(state: &mut State8080) {
             let hl = state.get_hl();
             let m = state.get_mem(hl);
 
-            let diff: u16 = state.a as u16 - m as u16 ;
+            let diff: u16 = (state.a as u16) - (m as u16);
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
             state.set_carry_flag(diff);
@@ -1468,7 +1568,7 @@ fn emulate(state: &mut State8080) {
         0xbf => {
             // CMP A
             // TODO: optimize this?
-            let diff: u16 = state.a as u16 - state.a as u16 ;
+            let diff: u16 = (state.a as u16) - (state.a as u16);
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
             state.set_carry_flag(diff);
@@ -1584,6 +1684,7 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0xd3 => {
+            // TODO: necessary for space invaders
             println!("unimplemented instruction: {}", opcode);
             return;
         },
@@ -1690,8 +1791,14 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0xeb => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // XCHG
+            let temp = state.h;
+            state.h = state.d;
+            state.d = temp;
+
+            let temp = state.l;
+            state.l = state.e;
+            state.e = temp;
         },
         0xec => {
             println!("unimplemented instruction: {}", opcode);
@@ -1759,14 +1866,15 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0xf9 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // SPHL
+            state.sp = state.get_hl();
         },
         0xfa => {
             println!("unimplemented instruction: {}", opcode);
             return;
         },
         0xfb => {
+            // TODO: necessary for space invaders
             println!("unimplemented instruction: {}", opcode);
             return;
         },
