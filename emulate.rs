@@ -135,6 +135,11 @@ impl State8080 {
     fn get_mem(&mut self, addr: u16) -> u8 {
         return self.memory[addr as usize];
     }
+
+    // sets the byte at the 16-bit address passed-in
+    fn set_mem(&mut self, addr: u16, val: u8) {
+        self.memory[addr as usize] = val;
+    }
 }
 
 
@@ -157,8 +162,9 @@ fn emulate(state: &mut State8080) {
             state.pc += 2;
         },
         0x02 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // STAX B
+            let bc: u16 = ((state.b as u16) << 8) | (state.c as u16);
+            state.set_mem(bc, state.a);
         },
         0x03 => {
             println!("unimplemented instruction: {}", opcode);
@@ -255,8 +261,9 @@ fn emulate(state: &mut State8080) {
             state.pc += 2;
         },
         0x12 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // STAX D
+            let de: u16 = ((state.d as u16) << 8) | (state.e as u16);
+            state.set_mem(de, state.a);
         },
         0x13 => {
             println!("unimplemented instruction: {}", opcode);
