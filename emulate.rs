@@ -1263,36 +1263,120 @@ fn emulate(state: &mut State8080) {
             state.a = xor as u8;
         },
         0xb0 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ORA B
+            let or: u16 = state.a as u16 | state.b as u16;
+            state.set_zero_flag(or);
+            state.set_sign_flag(or);
+            state.set_carry_flag(or);
+
+            // parity flag
+            state.cc.p = parity(or & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = or as u8;
         },
         0xb1 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ORA C
+            let or: u16 = state.a as u16 | state.c as u16 ;
+            state.set_zero_flag(or);
+            state.set_sign_flag(or);
+            state.set_carry_flag(or);
+
+            // parity flag
+            state.cc.p = parity(or & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = or as u8;
         },
         0xb2 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ORA D
+            let or: u16 = state.a as u16 | state.d as u16 ;
+            state.set_zero_flag(or);
+            state.set_sign_flag(or);
+            state.set_carry_flag(or);
+
+            // parity flag
+            state.cc.p = parity(or & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = or as u8;
         },
         0xb3 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ORA E
+            let or: u16 = state.a as u16 | state.e as u16 ;
+            state.set_zero_flag(or);
+            state.set_sign_flag(or);
+            state.set_carry_flag(or);
+
+            // parity flag
+            state.cc.p = parity(or & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = or as u8;
         },
         0xb4 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ORA H
+            let or: u16 = state.a as u16 | state.h as u16 ;
+            state.set_zero_flag(or);
+            state.set_sign_flag(or);
+            state.set_carry_flag(or);
+
+            // parity flag
+            state.cc.p = parity(or & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = or as u8;
         },
         0xb5 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ORA L
+            let or: u16 = state.a as u16 | state.l as u16 ;
+            state.set_zero_flag(or);
+            state.set_sign_flag(or);
+            state.set_carry_flag(or);
+
+            // parity flag
+            state.cc.p = parity(or & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = or as u8;
         },
         0xb6 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ORA M
+            let hl = state.get_hl();
+            let m = state.get_mem(hl);
+
+            let or: u16 = state.a as u16 | m as u16 ;
+            state.set_zero_flag(or);
+            state.set_sign_flag(or);
+            state.set_carry_flag(or);
+
+            // parity flag
+            state.cc.p = parity(or & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = or as u8;
         },
         0xb7 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // ORA A
+            // TODO: can this be optimized to just not modify a and set the flags?
+            let or: u16 = state.a as u16 | state.a as u16 ;
+            state.set_zero_flag(or);
+            state.set_sign_flag(or);
+            state.set_carry_flag(or);
+
+            // parity flag
+            state.cc.p = parity(or & 0xff);
+
+            // TODO: handle AC cc
+
+            state.a = or as u8;
         },
         0xb8 => {
             println!("unimplemented instruction: {}", opcode);
