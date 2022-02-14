@@ -1643,7 +1643,7 @@ fn emulate(state: &mut State8080) {
             // POP H
             state.l = state.get_mem(state.sp);
             state.h = state.get_mem(state.sp + 1);
-            state.sp = state.sp + 2;
+            state.sp += 2;
         },
         0xe2 => {
             println!("unimplemented instruction: {}", opcode);
@@ -1661,7 +1661,7 @@ fn emulate(state: &mut State8080) {
             // PUSH H
             state.set_mem(state.sp - 2, state.l);
             state.set_mem(state.sp - 1, state.h);
-            state.sp = state.sp - 2;
+            state.sp -= 2;
         },
         0xe6 => {
             // ANI byte
