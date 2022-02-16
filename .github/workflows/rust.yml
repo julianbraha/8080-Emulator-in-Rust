@@ -17,4 +17,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build
-      run: rustc emulate.rs
+      run: rustc --verbose -g emulate.rs
