@@ -416,9 +416,12 @@ fn emulate(state: &mut State8080) {
             // -
         },
         0x29 => {
-            // TODO: necessary for space invaders
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // DAD H
+            let mut hl = state.get_hl() as u32;
+            hl <<= 1;
+            state.set_carry_flag_double(hl);
+            state.h = (hl >> 8) as u8;
+            state.l = hl as u8;
         },
         0x2a => {
             println!("unimplemented instruction: {}", opcode);
@@ -486,8 +489,8 @@ fn emulate(state: &mut State8080) {
             state.set_mem(hl, byte_2);
         },
         0x37 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // STC
+            state.cc.cy = true;
         },
         0x38 => {
             // -
@@ -497,13 +500,14 @@ fn emulate(state: &mut State8080) {
             return;
         },
         0x3a => {
-            // TODO: necessary for space invaders
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // LDA adr
+            let addr = (byte_2 as u16) << 8 | (byte_3 as u16);
+            let mem = state.get_mem(addr);
+            state.a = mem;
         },
         0x3b => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // DCX SP
+            state.sp -= 1;
         },
         0x3c => {
             // INR A
