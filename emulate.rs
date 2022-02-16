@@ -462,14 +462,16 @@ fn emulate(state: &mut State8080) {
             // -
         },
         0x31 => {
-            // TODO: necessary for space invaders
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // LXI SP,D16
+            state.sp = (byte_3 as u16) | (byte_2 as u16);
         },
         0x32 => {
-            // TODO: necessary for space invaders
+            // STA adr
+            // required for space invaders
             println!("unimplemented instruction: {}", opcode);
             return;
+            //state.set_mem((byte_2 as u16) << 8 | (byte_3 as u16), state.a);
+
         },
         0x33 => {
             // INX SP
