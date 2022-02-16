@@ -24,7 +24,6 @@ fn emulate_all(hex_dump: String) {
         p: false,
         cy: false,
         ac: false,
-        pad: false,
     };
 
     let state = &mut State8080 {
@@ -39,7 +38,6 @@ fn emulate_all(hex_dump: String) {
         pc: 0,
         memory: Vec::new(),
         cc: cc,
-        int_enable: 0,
     };
 
     // calls emulate() for each instruction
@@ -68,7 +66,6 @@ struct ConditionCodes {
     p: bool, // true when result has even parity
     cy: bool, // true when instruction caused a carry out to a higher bit
     ac: bool, // TODO (not used by space invaders)
-    pad: bool,
 }
 
 
@@ -85,7 +82,6 @@ struct State8080 {
     memory: Vec<u8>, // in the original code this is an integer pointer, but here we use a vector because integers cannot be indexed in rust
     // TODO: change 'memory' to be a fixed size array once the necessary size is known
     cc: ConditionCodes,
-    int_enable: u8,
 }
 
 impl State8080 {
@@ -145,7 +141,6 @@ impl State8080 {
 
 // emulates one 8080 instruction
 fn emulate(state: &mut State8080) {
-    let MSB: u16 = 0b10000000;
     let opcode: u8 = state.get_mem(state.pc); // only needs 4 bytes, but rust doesn't have that...
     let byte_2: u8 = state.get_mem(state.pc + 1);
     let byte_3: u8 = state.get_mem(state.pc + 2);
