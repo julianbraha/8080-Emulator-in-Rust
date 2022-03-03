@@ -18,6 +18,9 @@ fn main() {
 
     // read the hex into a vector of strings, ignoring the line numbers
     let mut hex_strings: Vec<&str> = Vec::new();
+    /*for h in hex_strings {
+        println!("h is: {}", h );
+    }*/
     let reader = BufReader::new(File::open(&args[1]).expect("Cannot open file."));
     let l: Vec<String> = reader.lines().collect::<Result<_, _>>().unwrap();
     for i in 0..l.len() {
@@ -26,6 +29,8 @@ fn main() {
             // every 9 strings is just the line number
             if j % 9 != 0 {
                 hex_strings.push(strings[j]);
+                //println!("pushing: {}", strings[j]);
+                //println!("pushed byte {}", i + j);
             }
         }
     }
@@ -209,7 +214,7 @@ fn emulate(state: &mut State8080) {
             // LXI B,word
             state.c = byte_2;
             state.b = byte_3;
-            state.pc += 2;
+            state.pc += 3;
         },
         0x02 => {
             // STAX B
@@ -252,7 +257,7 @@ fn emulate(state: &mut State8080) {
         0x06 => {
             // MVI B,D8
             state.b = byte_2;
-            state.pc += 1;
+            state.pc += 2;
         },
         0x07 => {
             println!("unimplemented instruction: {}", opcode);
@@ -313,7 +318,7 @@ fn emulate(state: &mut State8080) {
         0x0e => {
             // MVI C,D8
             state.c = byte_2;
-            state.pc += 1;
+            state.pc += 2;
         },
         0x0f => {
             // RRC
@@ -332,7 +337,7 @@ fn emulate(state: &mut State8080) {
             // LXI D,D16
             state.d = byte_3;
             state.e = byte_2;
-            state.pc += 2;
+            state.pc += 3;
         },
         0x12 => {
             // STAX D
@@ -375,7 +380,7 @@ fn emulate(state: &mut State8080) {
         0x16 => {
             // MVI D,D8
             state.d = byte_2;
-            state.pc += 1;
+            state.pc += 2;
         },
         0x17 => {
             println!("unimplemented instruction: {}", opcode);
@@ -439,7 +444,7 @@ fn emulate(state: &mut State8080) {
         0x1e => {
             // MVI E,D8
             state.e = byte_2;
-            state.pc += 1;
+            state.pc += 2;
         },
         0x1f => {
             // RAR
@@ -458,7 +463,7 @@ fn emulate(state: &mut State8080) {
             // LXI H,D16
             state.h = byte_3;
             state.l = byte_2;
-            state.pc += 2;
+            state.pc += 3;
         },
         0x22 => {
             println!("unimplemented instruction: {}", opcode);
@@ -500,7 +505,7 @@ fn emulate(state: &mut State8080) {
         0x26 => {
             // MVI H,D8
             state.h = byte_2;
-            state.pc += 1;
+            state.pc += 2;
         },
         0x27 => {
             println!("unimplemented instruction: {}", opcode);
@@ -555,7 +560,7 @@ fn emulate(state: &mut State8080) {
         0x2e => {
             // MVI L,D8
             state.l = byte_2;
-            state.pc += 1;
+            state.pc += 2;
         },
         0x2f => {
             // CMA (not)
@@ -570,8 +575,8 @@ fn emulate(state: &mut State8080) {
         },
         0x31 => {
             // LXI SP,D16
-            state.sp = (byte_3 as u16) | (byte_2 as u16);
-            state.pc += 1;
+            state.sp = ((byte_3 as u16) << 8) | (byte_2 as u16);
+            state.pc += 3;
         },
         0x32 => {
             // STA adr
@@ -599,7 +604,7 @@ fn emulate(state: &mut State8080) {
             // MVI M,D8
             let hl = state.get_hl();
             state.set_mem(hl, byte_2);
-            state.pc += 1;
+            state.pc += 2;
         },
         0x37 => {
             // STC
@@ -622,7 +627,7 @@ fn emulate(state: &mut State8080) {
             let addr = (byte_2 as u16) << 8 | (byte_3 as u16);
             let mem = state.get_mem(addr);
             state.a = mem;
-            state.pc += 1;
+            state.pc += 3;
         },
         0x3b => {
             // DCX SP
@@ -648,7 +653,7 @@ fn emulate(state: &mut State8080) {
         0x3e => {
             // MVI A,D8
             state.a = byte_2;
-            state.pc += 1;
+            state.pc += 2;
         },
         0x3f => {
             // CMC
@@ -1847,7 +1852,7 @@ fn emulate(state: &mut State8080) {
                 state.pc = ((byte_3 as u16) << 8) | byte_2 as u16;
             } else {
                 // skip to the next instruction if the branch isn't taken
-                state.pc += 2;
+                state.pc += 3;
             }
         },
         0xc3 => {
@@ -1857,7 +1862,7 @@ fn emulate(state: &mut State8080) {
         0xc4 => {
             println!("unimplemented instruction: {}", opcode);
             return;
-            state.pc += 1;
+            state.pc += 3;
         },
         0xc5 => {
             // PUSH B
@@ -1880,7 +1885,7 @@ fn emulate(state: &mut State8080) {
             state.cc.p = parity(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
-            state.pc += 1;
+            state.pc += 2;
         },
         0xc7 => {
             println!("unimplemented instruction: {}", opcode);
@@ -1915,13 +1920,12 @@ fn emulate(state: &mut State8080) {
         },
         0xcd => {
             // CALL address
-
-            let ret: u16 = state.pc + 2;
-
-            state.set_mem(state.sp - 1, (ret >> 8) as u8 & 0xff);
-            state.set_mem(state.sp - 2, ret as u8 & 0xff);
-            state.sp = state.sp - 2;
-            state.pc = (byte_3 as u16) << 8 | byte_2 as u16;
+            state.set_mem(state.sp - 1, (state.pc >> 8) as u8);
+            println!("set the first succ");
+            state.set_mem(state.sp - 2, state.pc as u8);
+            println!("set the second succ");
+            state.sp -= 2;
+            state.pc = ((byte_3 as u16) << 8) | byte_2 as u16;
         },
         0xce => {
             println!("unimplemented instruction: {}", opcode);
@@ -2062,7 +2066,7 @@ fn emulate(state: &mut State8080) {
             state.cc.p = parity(x as u16);
             state.cc.cy = false;
             state.a = x;
-            state.pc += 1;
+            state.pc += 2;
         },
         0xe7 => {
             println!("unimplemented instruction: {}", opcode);
@@ -2208,7 +2212,7 @@ fn emulate(state: &mut State8080) {
             state.cc.s = 0x80 == (x & 0x80);
             state.cc.p = parity(x as u16);
             state.cc.cy = state.a < byte_2;
-            state.pc += 1;
+            state.pc += 2;
         },
         0xff => {
             println!("unimplemented instruction: {}", opcode);
