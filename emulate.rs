@@ -61,7 +61,7 @@ fn emulate_all(hex_dump: Vec<u16>) {
         l: 0,
         sp: 0,
         pc: 0,
-        memory: Vec::new(),
+        memory: vec![0; 65536], // size of the memory for the space invaders arcade machine
         cc: cc,
     };
 
@@ -69,8 +69,8 @@ fn emulate_all(hex_dump: Vec<u16>) {
     for i in 0..hex_dump.len() {
         // memory is in bytes, but our hexdump is in format xxxx xxxx ...
         // so we need to load in the leftmost 8 bits of each value, then the rightmost 8 bits.
-        state.memory.push((hex_dump[i] >> 8) as u8);
-        state.memory.push(hex_dump[i] as u8);
+        state.memory[i] = (hex_dump[i] >> 8) as u8;
+        state.memory[i] = hex_dump[i] as u8;
     }
 
     loop {
