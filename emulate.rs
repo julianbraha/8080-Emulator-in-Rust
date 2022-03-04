@@ -69,11 +69,14 @@ fn emulate_all(hex_dump: Vec<u16>) {
     };
 
     // loads the rom into memory
-    for i in 0..hex_dump.len() {
+    let mut i = 0;
+    for x in hex_dump {
         // memory is in bytes, but our hexdump is in format xxxx xxxx ...
         // so we need to load in the leftmost 8 bits of each value, then the rightmost 8 bits.
-        state.memory[i] = (hex_dump[i] >> 8) as u8;
-        state.memory[i] = hex_dump[i] as u8;
+        state.memory[i] = (x >> 8) as u8;
+        i += 1;
+        state.memory[i] = x as u8;
+        i += 1;
     }
 
     loop {
