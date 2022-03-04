@@ -243,18 +243,13 @@ fn emulate(state: &mut State8080) {
         },
         0x05 => {
             // DCR B
-            println!("we in here");
             let diff: u16 = (state.b as u16).wrapping_sub(1);
-            println!("wrapping sub works in mysterious ways");
             state.b = diff as u8;
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
-            println!("its the flags");
             // TODO: handle AC cc
             state.cc.p = false; // (dummy parity)(diff & 0xff);
-            println!("it's the parity");
             state.pc += 1;
-            println!("we made it past here");
         },
         0x06 => {
             // MVI B,D8
@@ -309,7 +304,7 @@ fn emulate(state: &mut State8080) {
         },
         0x0d => {
             // DCR C
-            let diff: u16 = (state.c as u16) - 1;
+            let diff: u16 = (state.c as u16).wrapping_sub(1);
             state.c = diff as u8;
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
@@ -371,7 +366,7 @@ fn emulate(state: &mut State8080) {
         },
         0x15 => {
             // DCR D
-            let diff: u16 = (state.d as u16) - 1;
+            let diff: u16 = (state.d as u16).wrapping_sub(1);
             state.d = diff as u8;
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
@@ -435,7 +430,7 @@ fn emulate(state: &mut State8080) {
         },
         0x1d => {
             // DCR E
-            let diff: u16 = (state.e as u16) - 1;
+            let diff: u16 = (state.e as u16).wrapping_sub(1);
             state.e = diff as u8;
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
@@ -496,7 +491,7 @@ fn emulate(state: &mut State8080) {
         },
         0x25 => {
             // DCR H
-            let diff: u16 = (state.h as u16) - 1;
+            let diff: u16 = (state.h as u16).wrapping_sub(1);
             state.h = diff as u8;
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
@@ -551,7 +546,7 @@ fn emulate(state: &mut State8080) {
         },
         0x2d => {
             // DCR L
-            let diff: u16 = (state.l as u16) - 1;
+            let diff: u16 = (state.l as u16).wrapping_sub(1);
             state.l = diff as u8;
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
