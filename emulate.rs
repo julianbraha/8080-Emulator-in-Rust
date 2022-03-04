@@ -1292,53 +1292,119 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0x96 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0x97 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // SUB A
+            // TODO: optimize this
+            let diff = (state.a as u16) - (state.a as u16);
+
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
+            state.set_carry_flag(diff);
+
+            state.cc.p = parity(diff & 0xff);
+
+            state.a = (diff as u8) & 0xff;
             state.pc += 1;
         },
         0x98 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // SBB B
+            let diff = (state.a as u16) - (state.b as u16) - (state.cc.cy as u16);
+
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
+            state.set_carry_flag(diff);
+
+            state.cc.p = parity(diff & 0xff);
+
+            state.a = (diff as u8) & 0xff;
             state.pc += 1;
         },
         0x99 => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // SBB C
+            let diff = (state.a as u16) - (state.c as u16) - (state.cc.cy as u16);
+
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
+            state.set_carry_flag(diff);
+
+            state.cc.p = parity(diff & 0xff);
+
+            state.a = (diff as u8) & 0xff;
             state.pc += 1;
         },
         0x9a => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // SBB D
+            let diff = (state.a as u16) - (state.d as u16) - (state.cc.cy as u16);
+
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
+            state.set_carry_flag(diff);
+
+            state.cc.p = parity(diff & 0xff);
+
+            state.a = (diff as u8) & 0xff;
             state.pc += 1;
         },
         0x9b => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // SBB E
+            let diff = (state.a as u16) - (state.e as u16) - (state.cc.cy as u16);
+
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
+            state.set_carry_flag(diff);
+
+            state.cc.p = parity(diff & 0xff);
+
+            state.a = (diff as u8) & 0xff;
             state.pc += 1;
         },
         0x9c => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // SBB H
+            let diff = (state.a as u16) - (state.h as u16) - (state.cc.cy as u16);
+
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
+            state.set_carry_flag(diff);
+
+            state.cc.p = parity(diff & 0xff);
+
+            state.a = (diff as u8) & 0xff;
             state.pc += 1;
         },
         0x9d => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // SBB L
+            let diff = (state.a as u16) - (state.l as u16) - (state.cc.cy as u16);
+
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
+            state.set_carry_flag(diff);
+
+            state.cc.p = parity(diff & 0xff);
+
+            state.a = (diff as u8) & 0xff;
             state.pc += 1;
         },
         0x9e => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0x9f => {
-            println!("unimplemented instruction: {}", opcode);
-            return;
+            // SBB A
+            // TODO: optimize this
+            let diff = (state.a as u16) - (state.c as u16) - (state.cc.cy as u16);
+
+            state.set_zero_flag(diff);
+            state.set_sign_flag(diff);
+            state.set_carry_flag(diff);
+
+            state.cc.p = parity(diff & 0xff);
+
+            state.a = (diff as u8) & 0xff;
             state.pc += 1;
         },
         0xa0 => {
