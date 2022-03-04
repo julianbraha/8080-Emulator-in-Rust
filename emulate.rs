@@ -202,9 +202,9 @@ fn emulate(state: &mut State8080) {
     let opcode: u8 = state.get_mem(state.pc); // only needs 4 bytes, but rust doesn't have that...
     let byte_2: u8 = state.get_mem(state.pc + 1);
     let byte_3: u8 = state.get_mem(state.pc + 2);
-    println!("opcode: {}", opcode);
-    println!("byte 2 is: {}", byte_2);
-    println!("byte 3 is: {}", byte_3);
+    println!("opcode: {:x}", opcode);
+    println!("byte 2 is: {:x}", byte_2);
+    println!("byte 3 is: {:x}", byte_3);
     match opcode {
         0x00 => {
             // NOP
@@ -261,12 +261,12 @@ fn emulate(state: &mut State8080) {
             state.pc += 2;
         },
         0x07 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
         },
         0x08 => {
             // -
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
         },
         0x09 => {
@@ -292,7 +292,7 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0x0b => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -330,7 +330,7 @@ fn emulate(state: &mut State8080) {
         },
         0x10 => {
             // -
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -384,13 +384,13 @@ fn emulate(state: &mut State8080) {
             state.pc += 2;
         },
         0x17 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0x18 => {
             // -
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -418,7 +418,7 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0x1b => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -456,7 +456,7 @@ fn emulate(state: &mut State8080) {
         },
         0x20 => {
             // -
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -467,7 +467,7 @@ fn emulate(state: &mut State8080) {
             state.pc += 3;
         },
         0x22 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -509,13 +509,13 @@ fn emulate(state: &mut State8080) {
             state.pc += 2;
         },
         0x27 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0x28 => {
             // -
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -529,12 +529,12 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0x2a => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0x2b => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -570,7 +570,7 @@ fn emulate(state: &mut State8080) {
         },
         0x30 => {
             // -
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -582,7 +582,7 @@ fn emulate(state: &mut State8080) {
         0x32 => {
             // STA adr
             // required for space invaders
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             //state.set_mem((byte_2 as u16) << 8 | (byte_3 as u16), state.a);
         },
@@ -592,12 +592,12 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0x34 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0x35 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -614,12 +614,12 @@ fn emulate(state: &mut State8080) {
         },
         0x38 => {
             // -
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0x39 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -647,7 +647,7 @@ fn emulate(state: &mut State8080) {
 
         },
         0x3d => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -693,7 +693,7 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0x46 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -733,7 +733,7 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0x4e => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -899,7 +899,7 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0x6e => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -909,32 +909,32 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0x70 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0x71 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0x72 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0x73 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0x74 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0x75 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -985,7 +985,7 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0x7f => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -1202,7 +1202,7 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0x8e => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -1252,7 +1252,7 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0x92 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -1272,7 +1272,7 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0x94 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -1835,7 +1835,7 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0xc0 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -1861,7 +1861,7 @@ fn emulate(state: &mut State8080) {
             state.pc = ((byte_3 as u16) << 8) | byte_2 as u16;
         },
         0xc4 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 3;
         },
@@ -1889,12 +1889,12 @@ fn emulate(state: &mut State8080) {
             state.pc += 2;
         },
         0xc7 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xc8 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -1904,18 +1904,18 @@ fn emulate(state: &mut State8080) {
             state.sp += 2;
         },
         0xca => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xcb => {
             // -
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xcc => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -1929,17 +1929,17 @@ fn emulate(state: &mut State8080) {
             state.pc = ((byte_3 as u16) << 8) | byte_2 as u16;
         },
         0xce => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xcf => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xd0 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -1951,18 +1951,18 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0xd2 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xd3 => {
             // TODO: necessary for space invaders
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xd4 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -1974,59 +1974,59 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0xd6 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xd7 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xd8 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xd9 => {
             // -
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xda => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xdb => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xdc => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xdd => {
             // -
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xde => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xdf => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xe0 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -2038,17 +2038,17 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0xe2 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xe3 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xe4 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -2070,22 +2070,22 @@ fn emulate(state: &mut State8080) {
             state.pc += 2;
         },
         0xe7 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xe8 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xe9 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xea => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -2101,28 +2101,28 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0xec => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xed => {
             // -
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xee => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xef => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xf0 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -2139,17 +2139,17 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0xf2 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xf3 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xf4 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -2166,17 +2166,17 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0xf6 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xf7 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xf8 => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -2186,24 +2186,24 @@ fn emulate(state: &mut State8080) {
             state.pc += 1;
         },
         0xfa => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xfb => {
             // TODO: necessary for space invaders
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xfc => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
         0xfd => {
             // -
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
@@ -2216,7 +2216,7 @@ fn emulate(state: &mut State8080) {
             state.pc += 2;
         },
         0xff => {
-            println!("unimplemented instruction: {}", opcode);
+            println!("unimplemented instruction: {:x}", opcode);
             return;
             state.pc += 1;
         },
