@@ -1,0 +1,5 @@
+[package]
+name = "emulator-8080"
+version = "0.0.1"
+authors = ["Julian Braha <julianbraha@mail.com>"]
+edition = "2021"

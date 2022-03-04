@@ -16,9 +16,6 @@ fn main() {
 
     // read the hex into a vector of strings, ignoring the line numbers
     let mut hex_strings: Vec<&str> = Vec::new();
-    /*for h in hex_strings {
-        println!("h is: {}", h );
-    }*/
     let reader = BufReader::new(File::open(&args[1]).expect("Cannot open file."));
     let l: Vec<String> = reader.lines().collect::<Result<_, _>>().unwrap();
     for i in 0..l.len() {
@@ -27,8 +24,6 @@ fn main() {
             // every 9 strings is just the line number
             if j % 9 != 0 {
                 hex_strings.push(strings[j]);
-                //println!("pushing: {}", strings[j]);
-                //println!("pushed byte {}", i + j);
             }
         }
     }
@@ -79,7 +74,8 @@ fn emulate_all(hex_dump: Vec<u16>) {
         i += 1;
     }
 
-    loop {
+    //loop {
+    for i in 0..11 {
         emulate(state);
         println!("state is: {}", state.clone().dump_state());
 
@@ -242,18 +238,23 @@ fn emulate(state: &mut State8080) {
             state.set_zero_flag(sum);
             state.set_sign_flag(sum);
             // TODO: handle AC cc
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
             state.pc += 1;
         },
         0x05 => {
             // DCR B
-            let diff: u16 = (state.b as u16) - 1;
+            println!("we in here");
+            let diff: u16 = (state.b as u16).wrapping_sub(1);
+            println!("wrapping sub works in mysterious ways");
             state.b = diff as u8;
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
+            println!("its the flags");
             // TODO: handle AC cc
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
+            println!("it's the parity");
             state.pc += 1;
+            println!("we made it past here");
         },
         0x06 => {
             // MVI B,D8
@@ -303,7 +304,7 @@ fn emulate(state: &mut State8080) {
             state.set_zero_flag(sum);
             state.set_sign_flag(sum);
             // TODO: handle AC cc
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
             state.pc += 1;
         },
         0x0d => {
@@ -313,7 +314,7 @@ fn emulate(state: &mut State8080) {
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
             // TODO: handle AC cc
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
             state.pc += 1;
         },
         0x0e => {
@@ -365,7 +366,7 @@ fn emulate(state: &mut State8080) {
             state.set_zero_flag(sum);
             state.set_sign_flag(sum);
             // TODO: handle AC cc
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
             state.pc += 1;
         },
         0x15 => {
@@ -375,7 +376,7 @@ fn emulate(state: &mut State8080) {
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
             // TODO: handle AC cc
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
             state.pc += 1;
         },
         0x16 => {
@@ -429,7 +430,7 @@ fn emulate(state: &mut State8080) {
             state.set_zero_flag(sum);
             state.set_sign_flag(sum);
             // TODO: handle AC cc
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
             state.pc += 1;
         },
         0x1d => {
@@ -439,7 +440,7 @@ fn emulate(state: &mut State8080) {
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
             // TODO: handle AC cc
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
             state.pc += 1;
         },
         0x1e => {
@@ -490,7 +491,7 @@ fn emulate(state: &mut State8080) {
             state.set_zero_flag(sum);
             state.set_sign_flag(sum);
             // TODO: handle AC cc
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
             state.pc += 1;
         },
         0x25 => {
@@ -500,7 +501,7 @@ fn emulate(state: &mut State8080) {
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
             // TODO: handle AC cc
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
             state.pc += 1;
         },
         0x26 => {
@@ -545,7 +546,7 @@ fn emulate(state: &mut State8080) {
             state.set_zero_flag(sum);
             state.set_sign_flag(sum);
             // TODO: handle AC cc
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
             state.pc += 1;
         },
         0x2d => {
@@ -555,7 +556,7 @@ fn emulate(state: &mut State8080) {
             state.set_zero_flag(diff);
             state.set_sign_flag(diff);
             // TODO: handle AC cc
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
             state.pc += 1;
         },
         0x2e => {
@@ -642,7 +643,7 @@ fn emulate(state: &mut State8080) {
             state.set_zero_flag(sum);
             state.set_sign_flag(sum);
             // TODO: handle AC cc
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
             state.pc += 1;
 
         },
@@ -1000,7 +1001,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(sum);
 
             // parity flag
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
             state.pc += 1;
@@ -1015,7 +1016,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(sum);
 
             // parity flag
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
             state.pc += 1;
@@ -1030,7 +1031,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(sum);
 
             // parity flag
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
             state.pc += 1;
@@ -1045,7 +1046,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(sum);
 
             // parity flag
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
             state.pc += 1;
@@ -1060,7 +1061,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(sum);
 
             // parity flag
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
             state.pc += 1;
@@ -1075,7 +1076,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(sum);
 
             // parity flag
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
             state.pc += 1;
@@ -1091,7 +1092,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(sum);
 
             // parity flag
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
             state.pc += 1;
@@ -1106,7 +1107,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(sum);
 
             // parity flag
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
             state.pc += 1;
@@ -1121,7 +1122,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(sum);
 
             // parity flag
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
             state.pc += 1;
@@ -1136,7 +1137,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(sum);
 
             // parity flag
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
             state.pc += 1;
@@ -1151,7 +1152,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(sum);
 
             // parity flag
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
             state.pc += 1;
@@ -1166,7 +1167,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(sum);
 
             // parity flag
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
             state.pc += 1;
@@ -1181,7 +1182,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(sum);
 
             // parity flag
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
             state.pc += 1;
@@ -1196,7 +1197,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(sum);
 
             // parity flag
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
             state.pc += 1;
@@ -1216,7 +1217,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(sum);
 
             // parity flag
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
             state.pc += 1;
@@ -1231,7 +1232,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(sum);
 
             // parity flag
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
             state.pc += 1;
@@ -1246,7 +1247,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(sum);
 
             // parity flag
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
             state.pc += 1;
@@ -1266,7 +1267,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(sum);
 
             // parity flag
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
             state.pc += 1;
@@ -1286,7 +1287,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(sum);
 
             // parity flag
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
             state.pc += 1;
@@ -1305,7 +1306,7 @@ fn emulate(state: &mut State8080) {
             state.set_sign_flag(diff);
             state.set_carry_flag(diff);
 
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
 
             state.a = (diff as u8) & 0xff;
             state.pc += 1;
@@ -1318,7 +1319,7 @@ fn emulate(state: &mut State8080) {
             state.set_sign_flag(diff);
             state.set_carry_flag(diff);
 
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
 
             state.a = (diff as u8) & 0xff;
             state.pc += 1;
@@ -1331,7 +1332,7 @@ fn emulate(state: &mut State8080) {
             state.set_sign_flag(diff);
             state.set_carry_flag(diff);
 
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
 
             state.a = (diff as u8) & 0xff;
             state.pc += 1;
@@ -1344,7 +1345,7 @@ fn emulate(state: &mut State8080) {
             state.set_sign_flag(diff);
             state.set_carry_flag(diff);
 
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
 
             state.a = (diff as u8) & 0xff;
             state.pc += 1;
@@ -1357,7 +1358,7 @@ fn emulate(state: &mut State8080) {
             state.set_sign_flag(diff);
             state.set_carry_flag(diff);
 
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
 
             state.a = (diff as u8) & 0xff;
             state.pc += 1;
@@ -1370,7 +1371,7 @@ fn emulate(state: &mut State8080) {
             state.set_sign_flag(diff);
             state.set_carry_flag(diff);
 
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
 
             state.a = (diff as u8) & 0xff;
             state.pc += 1;
@@ -1383,7 +1384,7 @@ fn emulate(state: &mut State8080) {
             state.set_sign_flag(diff);
             state.set_carry_flag(diff);
 
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
 
             state.a = (diff as u8) & 0xff;
             state.pc += 1;
@@ -1402,7 +1403,7 @@ fn emulate(state: &mut State8080) {
             state.set_sign_flag(diff);
             state.set_carry_flag(diff);
 
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
 
             state.a = (diff as u8) & 0xff;
             state.pc += 1;
@@ -1415,7 +1416,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(and);
 
             // parity flag
-            state.cc.p = parity(and & 0xff);
+            state.cc.p = false; // (dummy parity)(and & 0xff);
 
             // TODO: handle AC cc
 
@@ -1430,7 +1431,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(and);
 
             // parity flag
-            state.cc.p = parity(and & 0xff);
+            state.cc.p = false; // (dummy parity)(and & 0xff);
 
             // TODO: handle AC cc
 
@@ -1445,7 +1446,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(and);
 
             // parity flag
-            state.cc.p = parity(and & 0xff);
+            state.cc.p = false; // (dummy parity)(and & 0xff);
 
             // TODO: handle AC cc
 
@@ -1460,7 +1461,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(and);
 
             // parity flag
-            state.cc.p = parity(and & 0xff);
+            state.cc.p = false; // (dummy parity)(and & 0xff);
 
             // TODO: handle AC cc
 
@@ -1475,7 +1476,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(and);
 
             // parity flag
-            state.cc.p = parity(and & 0xff);
+            state.cc.p = false; // (dummy parity)(and & 0xff);
 
             // TODO: handle AC cc
 
@@ -1490,7 +1491,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(and);
 
             // parity flag
-            state.cc.p = parity(and & 0xff);
+            state.cc.p = false; // (dummy parity)(and & 0xff);
 
             // TODO: handle AC cc
 
@@ -1507,7 +1508,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(and);
 
             // parity flag
-            state.cc.p = parity(and & 0xff);
+            state.cc.p = false; // (dummy parity)(and & 0xff);
 
             // TODO: handle AC cc
 
@@ -1523,7 +1524,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(and);
 
             // parity flag
-            state.cc.p = parity(and & 0xff);
+            state.cc.p = false; // (dummy parity)(and & 0xff);
 
             // TODO: handle AC cc
 
@@ -1540,7 +1541,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(xor);
 
             // parity flag
-            state.cc.p = parity(xor & 0xff);
+            state.cc.p = false; // (dummy parity)(xor & 0xff);
 
             // TODO: handle AC cc
 
@@ -1557,7 +1558,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(xor);
 
             // parity flag
-            state.cc.p = parity(xor & 0xff);
+            state.cc.p = false; // (dummy parity)(xor & 0xff);
 
             // TODO: handle AC cc
 
@@ -1574,7 +1575,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(xor);
 
             // parity flag
-            state.cc.p = parity(xor & 0xff);
+            state.cc.p = false; // (dummy parity)(xor & 0xff);
 
             // TODO: handle AC cc
 
@@ -1591,7 +1592,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(xor);
 
             // parity flag
-            state.cc.p = parity(xor & 0xff);
+            state.cc.p = false; // (dummy parity)(xor & 0xff);
 
             // TODO: handle AC cc
 
@@ -1608,7 +1609,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(xor);
 
             // parity flag
-            state.cc.p = parity(xor & 0xff);
+            state.cc.p = false; // (dummy parity)(xor & 0xff);
 
             // TODO: handle AC cc
 
@@ -1625,7 +1626,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(xor);
 
             // parity flag
-            state.cc.p = parity(xor & 0xff);
+            state.cc.p = false; // (dummy parity)(xor & 0xff);
 
             // TODO: handle AC cc
 
@@ -1644,7 +1645,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(xor);
 
             // parity flag
-            state.cc.p = parity(xor & 0xff);
+            state.cc.p = false; // (dummy parity)(xor & 0xff);
 
             // TODO: handle AC cc
 
@@ -1661,7 +1662,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(xor);
 
             // parity flag
-            state.cc.p = parity(xor & 0xff);
+            state.cc.p = false; // (dummy parity)(xor & 0xff);
 
             // TODO: handle AC cc
 
@@ -1676,7 +1677,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(or);
 
             // parity flag
-            state.cc.p = parity(or & 0xff);
+            state.cc.p = false; // (dummy parity)(or & 0xff);
 
             // TODO: handle AC cc
 
@@ -1691,7 +1692,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(or);
 
             // parity flag
-            state.cc.p = parity(or & 0xff);
+            state.cc.p = false; // (dummy parity)(or & 0xff);
 
             // TODO: handle AC cc
 
@@ -1706,7 +1707,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(or);
 
             // parity flag
-            state.cc.p = parity(or & 0xff);
+            state.cc.p = false; // (dummy parity)(or & 0xff);
 
             // TODO: handle AC cc
 
@@ -1721,7 +1722,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(or);
 
             // parity flag
-            state.cc.p = parity(or & 0xff);
+            state.cc.p = false; // (dummy parity)(or & 0xff);
 
             // TODO: handle AC cc
 
@@ -1736,7 +1737,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(or);
 
             // parity flag
-            state.cc.p = parity(or & 0xff);
+            state.cc.p = false; // (dummy parity)(or & 0xff);
 
             // TODO: handle AC cc
 
@@ -1751,7 +1752,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(or);
 
             // parity flag
-            state.cc.p = parity(or & 0xff);
+            state.cc.p = false; // (dummy parity)(or & 0xff);
 
             // TODO: handle AC cc
 
@@ -1769,7 +1770,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(or);
 
             // parity flag
-            state.cc.p = parity(or & 0xff);
+            state.cc.p = false; // (dummy parity)(or & 0xff);
 
             // TODO: handle AC cc
 
@@ -1785,7 +1786,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(or);
 
             // parity flag
-            state.cc.p = parity(or & 0xff);
+            state.cc.p = false; // (dummy parity)(or & 0xff);
 
             // TODO: handle AC cc
 
@@ -1800,7 +1801,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(diff);
 
             // parity flag
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
 
             // TODO: handle AC cc
             state.pc += 1;
@@ -1813,7 +1814,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(diff);
 
             // parity flag
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
 
             // TODO: handle AC cc
             state.pc += 1;
@@ -1826,7 +1827,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(diff);
 
             // parity flag
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
 
             // TODO: handle AC cc
             state.pc += 1;
@@ -1839,7 +1840,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(diff);
 
             // parity flag
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
 
             // TODO: handle AC cc
             state.pc += 1;
@@ -1852,7 +1853,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(diff);
 
             // parity flag
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
 
             // TODO: handle AC cc
             state.pc += 1;
@@ -1865,7 +1866,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(diff);
 
             // parity flag
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
 
             // TODO: handle AC cc
             state.pc += 1;
@@ -1881,7 +1882,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(diff);
 
             // parity flag
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
 
             // TODO: handle AC cc
             state.pc += 1;
@@ -1895,7 +1896,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(diff);
 
             // parity flag
-            state.cc.p = parity(diff & 0xff);
+            state.cc.p = false; // (dummy parity)(diff & 0xff);
 
             // TODO: handle AC cc
             state.pc += 1;
@@ -1949,7 +1950,7 @@ fn emulate(state: &mut State8080) {
             state.set_carry_flag(sum);
 
             // parity flag
-            state.cc.p = parity(sum & 0xff);
+            state.cc.p = false; // (dummy parity)(sum & 0xff);
 
             state.a = (sum as u8) & 0xff;
             state.pc += 2;
@@ -1988,9 +1989,7 @@ fn emulate(state: &mut State8080) {
         0xcd => {
             // CALL address
             state.set_mem(state.sp - 1, (state.pc >> 8) as u8);
-            println!("set the first succ");
             state.set_mem(state.sp - 2, state.pc as u8);
-            println!("set the second succ");
             state.sp -= 2;
             state.pc = ((byte_3 as u16) << 8) | byte_2 as u16;
         },
@@ -2130,7 +2129,7 @@ fn emulate(state: &mut State8080) {
             let x: u8 = state.a & byte_2;
             state.cc.z = x == 0;
             state.cc.s = 0x80 == (x & 0x80);
-            state.cc.p = parity(x as u16);
+            state.cc.p = false; // (dummy parity)(x as u16);
             state.cc.cy = false;
             state.a = x;
             state.pc += 2;
@@ -2277,7 +2276,7 @@ fn emulate(state: &mut State8080) {
             let x: u8 = state.a - byte_2;
             state.cc.z = x == 0;
             state.cc.s = 0x80 == (x & 0x80);
-            state.cc.p = parity(x as u16);
+            state.cc.p = false; // (dummy parity)(x as u16);
             state.cc.cy = state.a < byte_2;
             state.pc += 2;
         },
@@ -2293,6 +2292,7 @@ fn emulate(state: &mut State8080) {
 fn parity(bitstring: u16) -> bool {
     let mut counter: u8 = 0;
     let mut one: u16 = 1;
+    println!("bitstring is {}", bitstring);
 
     while one <= 0b1000000000000000 {
         if one & bitstring != 0 {
