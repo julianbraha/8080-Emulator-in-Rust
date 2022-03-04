@@ -1,7 +1,5 @@
 // emulates the 8080
 // written following this guide: http://www.emulator101.com/
-use std::fs;
-use std::i64;
 use std::env;
 
 use std::fs::File;
