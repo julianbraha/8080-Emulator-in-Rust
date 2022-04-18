@@ -17,9 +17,9 @@ fn main() {
     // read the hex into a vector of strings, ignoring the line numbers
     let mut hex_strings: Vec<&str> = Vec::new();
     let reader = BufReader::new(File::open(&args[1]).expect("Cannot open file."));
-    let l: Vec<String> = reader.lines().collect::<Result<_, _>>().unwrap();
-    for i in 0..l.len() {
-        let strings: Vec<&str> = l[i].split_whitespace().collect();
+    let lines: Vec<String> = reader.lines().collect::<Result<_, _>>().unwrap();
+    for line in lines.iter() {
+        let strings: Vec<&str> = line.split_whitespace().collect();
         for j in 0..strings.len() {
             // every 9 strings is just the line number
             if j % 9 != 0 {
@@ -30,8 +30,8 @@ fn main() {
 
     // convert the hex strings into unsigned 16-bit integers
     let mut rom: Vec<u16> = Vec::new();
-    for i in 0..hex_strings.len() {
-        let int_rep = u16::from_str_radix(hex_strings[i], 16).unwrap();
+    for h in hex_strings.iter() {
+        let int_rep = u16::from_str_radix(h, 16).unwrap();
         rom.push(int_rep);
     }
 
